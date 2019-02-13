@@ -62,6 +62,47 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     assert json_response(conn, 200) == %{"success" => true, "noop" => true}
   end
 
+  test "POST /webhooks with disable_learners flag to true", %{conn: conn} do
+    params = %{
+      "disable_learners" => "true",
+      "stacks" => "elixir",
+      "action" => "opened",
+      "number" => 1,
+      "repository" => %{"full_name" => "mirego/foo", "owner" => %{"login" => "mirego"}},
+      "pull_request" => %{"user" => %{"login" => "remiprev"}, "body" => "Foo"}
+    }
+
+    Dispatch.Repositories.MockClient
+    |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
+    |> expect(:fetch_contributors, fn "mirego/foo" -> @contributors end)
+    |> expect(:request_reviewers, fn "mirego/foo", 1, [%SelectedUser{username: "bar", type: "contributor"}] -> :ok end)
+    |> expect(:create_request_comment, fn "mirego/foo", 1, [%SelectedUser{username: "bar", type: "contributor"}] -> :ok end)
+
+    Dispatch.Settings.MockClient
+    |> expect(:refresh, fn -> true end)
+    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:expert_users, fn "elixir" -> [] end)
+
+    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+
+    conn = post(conn, "/webhooks", params)
+
+    assert json_response(conn, 200) == %{
+             "success" => true,
+             "noop" => false,
+             "reviewers" => [
+               %{
+                 "metadata" => %{
+                   "recent_commit_count" => 1,
+                   "total_commit_count" => 1
+                 },
+                 "type" => "contributor",
+                 "username" => "bar"
+               }
+             ]
+           }
+  end
+
   test "POST /webhooks without stacks", %{conn: conn} do
     params = %{
       "action" => "opened",
