@@ -1,0 +1,10 @@
+_build/
+.git/
+deps/
+test/
+priv/static/
+
+.*
+docker-compose.yml
+Makefile
+README.md

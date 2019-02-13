@@ -1,0 +1,22 @@
+language: 'elixir'
+
+elixir: 1.7.4
+otp_release: 21.1.3
+
+cache:
+  directories:
+    - _build
+    - deps
+
+env:
+  global:
+    - MIX_ENV: test
+
+before_install:
+  - 'echo `curl --verbose http://jsonip.com`'
+
+before_script:
+  - 'mix compile'
+
+script:
+  - ./priv/scripts/ci-check.sh

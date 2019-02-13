@@ -1,0 +1,8 @@
+version: '3.3'
+services:
+  application:
+    image: dispatch
+    container_name: dispatch
+    env_file: .env.dev
+    ports:
+      - 4000:4000
