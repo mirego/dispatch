@@ -171,10 +171,9 @@ The most common reasons as to why there was fewer requested reviews that usual (
 
 ## 🚀 Deploy
 
-### Heroku
+The application can be deployed on Heroku following the  [Container Registry & Runtime](https://devcenter.heroku.com/articles/container-registry-and-runtime) guide.
 
-The application can be deployed on Heroku using the [`heroku-buildpack-elixir`](https://github.com/HashNuke/heroku-buildpack-elixir.git) buildpack.
-
-### OTP release
-
-An _OTP release_ can be created with `make build`.
+1. Create a docker image for the _OTP release_ `make build DOCKER_IMAGE_TAG=latest`
+2. Tag the image for Heroky’s registry `docker tag dispatch:latest registry.heroku.com/dispatch/web`
+3. Push the image to the registry `docker push registry.heroku.com/dispatch/web`
+4. Release the image `heroku container:release web`

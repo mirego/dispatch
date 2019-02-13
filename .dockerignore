@@ -1,10 +1,13 @@
-_build/
 .git/
+.elixir_ls/
+_build/
 deps/
 test/
 priv/static/
 
 .*
+coveralls.json
 docker-compose.yml
 Makefile
+CODE_OF_CONDUCT.md
 README.md

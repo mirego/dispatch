@@ -1,7 +1,7 @@
 #
 # Step 1 - build the OTP binary
 #
-FROM elixir:1.7.4-alpine AS builder
+FROM elixir:1.8.1-alpine AS builder
 
 ARG APP_NAME
 ARG APP_VERSION
@@ -16,7 +16,7 @@ WORKDIR /build
 # This step installs all the build tools we'll need
 RUN apk update && \
     apk upgrade --no-cache && \
-    apk add --no-cache git build-base python
+    apk add --no-cache make git openssl-dev python
 RUN mix local.rebar --force && \
     mix local.hex --force
 
@@ -38,7 +38,7 @@ RUN cd /opt/build && \
 #
 # Step 2 - build a lean runtime container
 #
-FROM alpine:3.8
+FROM alpine:3.9
 
 ARG APP_NAME
 ENV APP_NAME=${APP_NAME}
@@ -46,7 +46,7 @@ ENV APP_NAME=${APP_NAME}
 # Update kernel and install runtime dependencies
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
-    apk --no-cache add bash openssl ca-certificates erlang-crypto
+    apk --no-cache add bash openssl erlang-crypto
 
 WORKDIR /opt/dispatch
 
