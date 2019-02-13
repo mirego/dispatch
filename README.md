@@ -3,7 +3,7 @@
   <p><br />Dispatch makes sure pull requests within an GitHub<br /> organization get reviewed by the right people.</p>
 
   <a href="https://travis-ci.com/mirego/dispatch"><img src="https://travis-ci.com/mirego/dispatch.svg?branch=master" /></a>
-  <a href="https://coveralls.io/github/mirego/dispatch=master"><img src="https://coveralls.io/repos/github/mirego/dispatch/badge.svg?branch=master" /></a>
+  <a href="https://coveralls.io/github/mirego/dispatch"><img src="https://coveralls.io/repos/github/mirego/dispatch/badge.svg?branch=master" /></a>
 </div>
 <br />
 
