@@ -1,7 +1,3 @@
-# The version of Alpine to use for the final image have to match
-# the version `elixir:1.7.3-alpine`/`erlang:21-alpine` are based on.
-ARG ALPINE_VERSION=3.8
-
 #
 # Step 1 - build the OTP binary
 #
@@ -31,8 +27,6 @@ RUN mix deps.get --only ${MIX_ENV}
 COPY . .
 RUN mix compile --force
 
-RUN mix phx.digest
-
 RUN mkdir -p /opt/build && \
     mix release --verbose && \
     cp _build/${MIX_ENV}/rel/${APP_NAME}/releases/${APP_VERSION}/${APP_NAME}.tar.gz /opt/build
@@ -44,7 +38,7 @@ RUN cd /opt/build && \
 #
 # Step 2 - build a lean runtime container
 #
-FROM alpine:${ALPINE_VERSION}
+FROM alpine:3.8
 
 ARG APP_NAME
 ENV APP_NAME=${APP_NAME}
@@ -52,7 +46,7 @@ ENV APP_NAME=${APP_NAME}
 # Update kernel and install runtime dependencies
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
-    apk --no-cache add bash openssl
+    apk --no-cache add bash openssl ca-certificates erlang-crypto
 
 WORKDIR /opt/dispatch
 
