@@ -6,6 +6,7 @@ defmodule Dispatch.Mixfile do
       app: :dispatch,
       version: "1.0.3",
       elixir: "1.7.4",
+      erlang: "21.1.3",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_paths: ["test"],
       test_pattern: "**/*_test.exs",
@@ -13,6 +14,7 @@ defmodule Dispatch.Mixfile do
       preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -67,6 +69,12 @@ defmodule Dispatch.Mixfile do
       # Test
       {:mock, "~> 0.2.0", only: :test},
       {:mox, "~> 0.4.0", only: :test}
+    ]
+  end
+
+  defp aliases do
+    [
+      "compile.app": ["erlang.check_version", "compile.app"]
     ]
   end
 end
