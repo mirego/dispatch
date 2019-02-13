@@ -5,15 +5,25 @@ defmodule DispatchWeb.Webhooks.Controller do
   def create(conn, %{"action" => "opened", "pull_request" => %{"title" => "WIP:" <> _}}), do: json(conn, %{success: true, noop: true})
   def create(conn, %{"action" => "opened", "pull_request" => %{"title" => "[WIP]" <> _}}), do: json(conn, %{success: true, noop: true})
 
-  def create(
-        conn,
-        %{
-          "number" => pull_request_number,
-          "action" => "opened",
-          "pull_request" => %{"user" => %{"login" => author}},
-          "repository" => %{"full_name" => repo, "owner" => %{"login" => "mirego"}}
-        } = params
-      ) do
+  def create(conn, %{"action" => "opened", "repository" => %{"owner" => %{"login" => repo_owner}}} = params) do
+    github_organization_login = github_organization_login()
+
+    case repo_owner do
+      ^github_organization_login ->
+        do_create(conn, params)
+
+      _ ->
+        json(conn, %{success: true, noop: true})
+    end
+  end
+
+  def create(conn, _), do: json(conn, %{success: true, noop: true})
+
+  defp do_create(conn, params) do
+    pull_request_number = get_in(params, ["number"])
+    author = get_in(params, ["pull_request", "user", "login"])
+    repo = get_in(params, ["repository", "full_name"])
+
     stacks = Dispatch.extract_from_params(params)
     selected_users = Dispatch.fetch_selected_users(repo, stacks, author)
 
@@ -28,5 +38,5 @@ defmodule DispatchWeb.Webhooks.Controller do
     end
   end
 
-  def create(conn, _), do: json(conn, %{success: true, noop: true})
+  defp github_organization_login, do: Application.get_env(:dispatch, DispatchWeb.Webhooks)[:github_organization_login]
 end
