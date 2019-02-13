@@ -1,6 +1,9 @@
 <div align="center">
   <img src="https://user-images.githubusercontent.com/11348/52539280-3a45e600-2d4a-11e9-854e-e2dd025d6af3.png" width="400" />
   <p><br />Dispatch makes sure pull requests within an GitHub<br /> organization get reviewed by the right people.</p>
+
+  <a href="https://travis-ci.com/mirego/dispatch"><img src="https://travis-ci.com/mirego/dispatch.svg?branch=master" />
+  <a href="https://coveralls.io/github/mirego/dispatch=master"><img src="https://coveralls.io/repos/github/mirego/dispatch/badge.svg?branch=master" />
 </div>
 <br />
 

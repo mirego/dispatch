@@ -20,3 +20,4 @@ before_script:
 
 script:
   - ./priv/scripts/ci-check.sh
+  - mix coveralls.travis
