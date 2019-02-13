@@ -37,7 +37,7 @@ Everything is done via a simple GitHub webhook:
 
 | Parameter          | Default value | Description                                                        |
 |--------------------|---------------|--------------------------------------------------------------------|
-| `stacks`           | `[]`          | Comma-separated values of project’s stacks (e.g. `elixir,graphql`) |
+| `stacks`           | `""`          | Comma-separated values of project’s stacks (e.g. `elixir,graphql`) |
 | `disable_learners` | `false`       | Disable _learners_ for this repository                             |
 
 ### Features
