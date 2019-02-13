@@ -84,6 +84,9 @@ config :sentry,
   root_source_code_path: File.cwd!(),
   enable_source_code_context: true
 
+# Configure Webhooks
+config :dispatch, DispatchWeb.Webhooks, github_organization_login: Environment.get("GITHUB_ORGANIZATION_LOGIN")
+
 # Configure clients
 config :dispatch, Dispatch,
   repositories_client: Dispatch.Repositories.GitHubClient,

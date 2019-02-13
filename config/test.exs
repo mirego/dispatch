@@ -9,6 +9,8 @@ config :dispatch, Dispatch.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
+config :dispatch, DispatchWeb.Webhooks, github_organization_login: "mirego"
+
 config :dispatch, Dispatch,
   repositories_client: Dispatch.Repositories.MockClient,
   settings_client: Dispatch.Settings.MockClient,
