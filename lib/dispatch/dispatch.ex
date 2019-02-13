@@ -32,7 +32,7 @@ defmodule Dispatch do
   @doc """
   Returns a list of usernames that should be request to review the pull request
   """
-  def fetch_selected_users(repo, stacks, author_username) do
+  def fetch_selected_users(repo, stacks, author_username, disable_learners \\ false) do
     excluded_usernames = [author_username | Enum.map(Settings.blacklisted_users(), & &1.username)]
 
     # 1. Refresh settings
@@ -55,7 +55,7 @@ defmodule Dispatch do
     requestable_usernames = update_requestable_usernames(requestable_usernames, Enum.map(contributors, & &1.username))
 
     # 5. Update the pool and then randomly add -learners as reviewers for each stack
-    stack_learners = Settings.learners(requestable_usernames, stacks)
+    stack_learners = if disable_learners, do: [], else: Settings.learners(requestable_usernames, stacks)
 
     # 6. Map all selected users to SelectedUser struct
     Enum.map(contributors ++ stack_experts ++ stack_learners, &struct(SelectedUser, Map.from_struct(&1)))

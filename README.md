@@ -27,11 +27,18 @@ Dispatch gets notified about pull requests opened in GitHub projects. It then se
 
 Everything is done via a simple GitHub webhook:
 
-| Field        | Value                                                                  |
-|--------------|------------------------------------------------------------------------|
-| Payload URL  | `<dispatch URL>/webhooks?stacks=first_stack,second_stack`              |
-| Content type | `application/json`                                                     |
-| Events       | Send me **everything**.                                                |
+| Field        | Value                                  |
+|--------------|----------------------------------------|
+| Payload URL  | `https://my-dispatch-app.com/webhooks` |
+| Content type | `application/json`                     |
+| Events       | Send me **everything**.                |
+
+#### Webhook query string parameters
+
+| Parameter          | Default value | Description                                                        |
+|--------------------|---------------|--------------------------------------------------------------------|
+| `stacks`           | `[]`          | Comma-separated values of project’s stacks (e.g. `elixir,graphql`) |
+| `disable_learners` | `false`       | Disable _learners_ for this project                                |
 
 ### Features
 
