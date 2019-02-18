@@ -116,7 +116,7 @@ The `priv/scripts/ci-check.sh` script runs a few commands (tests, lint, etc.) to
 
 ### Experts, learners and blacklisted users
 
-The configuration file stored `CONFIGURATION_FILE_URL` should contain a JSON object with three keys:
+The configuration file stored at `CONFIGURATION_FILE_URL` should contain a JSON object with three keys:
 
 * `blacklist`
 * `experts`
