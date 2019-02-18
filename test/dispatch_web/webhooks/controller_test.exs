@@ -17,7 +17,8 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     %User{username: "bar", fullname: "bar"},
     %User{username: "pif", fullname: "pif"},
     %User{username: "paf", fullname: "paf"},
-    %User{username: "ruby-master", fullname: "The Ruby Master"}
+    %User{username: "ruby-master", fullname: "The Ruby Master"},
+    %User{username: "ruby-learner", fullname: "The Ruby Learner"}
   ]
   @contributors [
     %Contributor{username: "bar", relevancy: 1, recent_commit_count: 1, total_commit_count: 1},
@@ -233,7 +234,8 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                           1,
                                           [
                                             %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                            %SelectedUser{username: "ruby-master", type: "stack", metadata: %{stack: "ruby"}}
+                                            %SelectedUser{username: "ruby-master", type: "stack", metadata: %{stack: "ruby"}},
+                                            %SelectedUser{username: "ruby-learner", type: "learner", metadata: %{stack: "ruby"}}
                                           ] ->
       :ok
     end)
@@ -261,6 +263,11 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                  "metadata" => %{"stack" => "ruby"},
                  "type" => "stack",
                  "username" => "ruby-master"
+               },
+               %{
+                 "metadata" => %{"stack" => "ruby", "exposure" => 1},
+                 "type" => "learner",
+                 "username" => "ruby-learner"
                }
              ]
            }
