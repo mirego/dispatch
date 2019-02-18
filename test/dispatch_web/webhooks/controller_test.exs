@@ -294,4 +294,17 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     conn = post(conn, "/webhooks", params)
     assert json_response(conn, 200) == %{"success" => false, "noop" => false}
   end
+
+  test "POST /webhooks from a non-organization pull request", %{conn: conn} do
+    params = %{
+      "stacks" => "elixir,graphql",
+      "action" => "opened",
+      "number" => 1,
+      "repository" => %{"full_name" => "non_mirego/foo", "owner" => %{"login" => "non_mirego"}},
+      "pull_request" => %{"user" => %{"login" => "remiprev"}, "body" => "Foo"}
+    }
+
+    conn = post(conn, "/webhooks", params)
+    assert json_response(conn, 200) == %{"success" => true, "noop" => true}
+  end
 end
