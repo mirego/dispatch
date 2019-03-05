@@ -27,6 +27,8 @@ defmodule Dispatch.Repositories.GitHubClient do
   @doc """
   Given a repo, a pull request and a list of reviewers, request them as reviewers using the REST API.
   """
+  def request_reviewers(_, _, []), do: :ok
+
   def request_reviewers(repo, pull_request_number, reviewers) do
     url = "/repos/#{repo}/pulls/#{pull_request_number}/requested_reviewers"
 
@@ -46,6 +48,8 @@ defmodule Dispatch.Repositories.GitHubClient do
   @doc """
   Given a repo, a pull request and a list of reviewers, create a comment documenting why the reviewers were chosen using the REST API.
   """
+  def create_request_comment(_, _, []), do: :ok
+
   def create_request_comment(repo, pull_request_number, reviewers) do
     url = "/repos/#{repo}/issues/#{pull_request_number}/comments"
 

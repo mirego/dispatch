@@ -215,7 +215,11 @@ defmodule Dispatch.Repositories.GitHubClientTest do
     end
   end
 
-  test "request_reviewers/1 with successful response" do
+  test "request_reviewers/3 without reviewers" do
+    assert :ok == GitHubClient.request_reviewers("mirego/foo", 123, [])
+  end
+
+  test "request_reviewers/3 with successful response" do
     expected_url = "https://api.github.com/repos/mirego/foo/pulls/123/requested_reviewers"
     body = "{\"reviewers\":[\"morpheus\",\"neo\"]}"
 
@@ -225,7 +229,7 @@ defmodule Dispatch.Repositories.GitHubClientTest do
     end
   end
 
-  test "request_reviewers/1 with non-successful response" do
+  test "request_reviewers/3 with non-successful response" do
     expected_url = "https://api.github.com/repos/mirego/foo/pulls/123/requested_reviewers"
     body = "{\"reviewers\":[\"morpheus\",\"neo\"]}"
 
@@ -235,7 +239,7 @@ defmodule Dispatch.Repositories.GitHubClientTest do
     end
   end
 
-  test "request_reviewers/1 with erroneous response" do
+  test "request_reviewers/3 with erroneous response" do
     expected_url = "https://api.github.com/repos/mirego/foo/pulls/123/requested_reviewers"
     body = "{\"reviewers\":[\"morpheus\",\"neo\"]}"
 
@@ -243,6 +247,10 @@ defmodule Dispatch.Repositories.GitHubClientTest do
       assert :error ==
                GitHubClient.request_reviewers("mirego/foo", 123, [%SelectedUser{username: "morpheus", type: "contributor"}, %SelectedUser{username: "neo", type: "stack/assembler"}])
     end
+  end
+
+  test "create_request_comment/3 without reviewers" do
+    assert :ok == GitHubClient.create_request_comment("mirego/foo", 123, [])
   end
 
   test "create_request_comment/3 with successful response" do
