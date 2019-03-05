@@ -314,4 +314,33 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     conn = post(conn, "/webhooks", params)
     assert json_response(conn, 200) == %{"success" => true, "noop" => true}
   end
+
+  test "POST /webhooks without selected reviewers", %{conn: conn} do
+    params = %{
+      "action" => "opened",
+      "number" => 1,
+      "repository" => %{"full_name" => "mirego/foo", "owner" => %{"login" => "mirego"}},
+      "pull_request" => %{"user" => %{"login" => "remiprev"}, "body" => "Foo"}
+    }
+
+    Dispatch.Repositories.MockClient
+    |> expect(:fetch_requestable_users, fn "mirego/foo" -> [] end)
+    |> expect(:fetch_contributors, fn "mirego/foo" -> [] end)
+    |> expect(:request_reviewers, fn "mirego/foo", 1, [] -> :ok end)
+    |> expect(:create_request_comment, fn "mirego/foo", 1, [] -> :ok end)
+
+    Dispatch.Settings.MockClient
+    |> expect(:refresh, fn -> true end)
+    |> expect(:blacklisted_users, fn -> [] end)
+
+    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+
+    conn = post(conn, "/webhooks", params)
+
+    assert json_response(conn, 200) == %{
+             "success" => true,
+             "noop" => false,
+             "reviewers" => []
+           }
+  end
 end
