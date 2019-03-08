@@ -23,6 +23,8 @@
 
 Dispatch gets notified about pull requests opened in GitHub projects. It then selects random users (based on existing contributors and stack-skilled developers) and requests their review.
 
+<img src="https://user-images.githubusercontent.com/11348/54038916-b12a9f00-418f-11e9-84d9-035c9b4c3da8.png" width="771">
+
 ### How to use it?
 
 Everything is done via a simple GitHub webhook:
