@@ -5,8 +5,8 @@ defmodule Dispatch.Mixfile do
     [
       app: :dispatch,
       version: "1.0.3",
-      elixir: "1.7.4",
-      erlang: "21.1.2",
+      elixir: "1.8.1",
+      erlang: "21.2.6",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_paths: ["test"],
       test_pattern: "**/*_test.exs",

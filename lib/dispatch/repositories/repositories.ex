@@ -19,7 +19,7 @@ defmodule Dispatch.Repositories do
     repo
     |> client().fetch_contributors()
     |> Enum.filter(&Enum.member?(requestable_usernames, &1.username))
-    |> relevant_contributors()
+    |> Contributors.select()
   end
 
   def request_reviewers(repo, pull_request_number, reviewers) do
@@ -29,8 +29,6 @@ defmodule Dispatch.Repositories do
   def create_request_comment(repo, pull_request_number, reviewers) do
     client().create_request_comment(repo, pull_request_number, reviewers)
   end
-
-  def relevant_contributors(contributors), do: Contributors.select(contributors)
 
   defp client, do: Application.get_env(:dispatch, Dispatch)[:repositories_client]
 end

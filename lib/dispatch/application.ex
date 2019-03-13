@@ -5,6 +5,7 @@ defmodule Dispatch.Application do
 
   use Application
 
+  alias Dispatch.Settings.JSONStaticFileClient
   alias DispatchWeb.Endpoint
 
   def start(_type, _args) do
@@ -12,7 +13,7 @@ defmodule Dispatch.Application do
 
     children = [
       supervisor(Endpoint, []),
-      supervisor(Dispatch.Settings.JSONStaticFileClient, [])
+      supervisor(JSONStaticFileClient, [])
     ]
 
     opts = [strategy: :one_for_one, name: Dispatch.Supervisor]

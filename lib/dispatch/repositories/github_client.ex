@@ -2,12 +2,10 @@ defmodule Dispatch.Repositories.GitHubClient do
   @moduledoc """
   Expose functions to query everything related to repositories using GitHub REST and GraphQL APIs.
   """
+
   @behaviour Dispatch.Repositories.ClientBehaviour
 
-  alias Dispatch.Repositories.Contributor
-  alias Dispatch.Repositories.Contributors
-  alias Dispatch.Repositories.RequestComments
-  alias Dispatch.Repositories.User
+  alias Dispatch.Repositories.{Contributor, Contributors, RequestComments, User}
 
   @base_url "https://api.github.com"
   @retry_count 10
@@ -32,15 +30,10 @@ defmodule Dispatch.Repositories.GitHubClient do
   def request_reviewers(repo, pull_request_number, reviewers) do
     url = "/repos/#{repo}/pulls/#{pull_request_number}/requested_reviewers"
 
-    body =
-      Poison.encode!(%{
-        reviewers: Enum.map(reviewers, & &1.username)
-      })
-
-    (@base_url <> url)
-    |> HTTPoison.post(body, rest_headers())
-    |> case do
-      {:ok, %HTTPoison.Response{status_code: 201}} -> :ok
+    with {:ok, body} <- Jason.encode(%{reviewers: Enum.map(reviewers, & &1.username)}),
+         {:ok, %HTTPoison.Response{status_code: 201}} <- HTTPoison.post(@base_url <> url, body, rest_headers()) do
+      :ok
+    else
       _ -> :error
     end
   end
@@ -53,15 +46,11 @@ defmodule Dispatch.Repositories.GitHubClient do
   def create_request_comment(repo, pull_request_number, reviewers) do
     url = "/repos/#{repo}/issues/#{pull_request_number}/comments"
 
-    body =
-      Poison.encode!(%{
-        body: RequestComments.request_comment(reviewers)
-      })
-
-    (@base_url <> url)
-    |> HTTPoison.post(body, rest_headers())
-    |> case do
-      {:ok, %HTTPoison.Response{status_code: 201}} -> :ok
+    with comment <- RequestComments.request_comment(reviewers),
+         {:ok, body} <- Jason.encode(%{body: comment}),
+         {:ok, %HTTPoison.Response{status_code: 201}} <- HTTPoison.post(@base_url <> url, body, rest_headers()) do
+      :ok
+    else
       _ -> :error
     end
   end
@@ -69,11 +58,13 @@ defmodule Dispatch.Repositories.GitHubClient do
   @doc """
   Returns all users that can be selected as reviewwers in a repository.
   """
-  def fetch_requestable_users(repo), do: fetch_requestable_users(repo, 0)
+  def fetch_requestable_users(repo, try_count \\ 0)
 
-  defp fetch_requestable_users(_, try_count) when try_count > @retry_count, do: []
+  def fetch_requestable_users(_, try_count) when try_count > @retry_count do
+    []
+  end
 
-  defp fetch_requestable_users(repo, try_count) do
+  def fetch_requestable_users(repo, try_count) do
     [repo_owner, repo_name] = String.split(repo, "/")
 
     query = """
@@ -84,53 +75,48 @@ defmodule Dispatch.Repositories.GitHubClient do
     }
     """
 
-    body =
-      Poison.encode!(%{
-        query: query,
-        variables: %{
-          repoOwner: repo_owner,
-          repoName: repo_name
-        }
-      })
+    request = %{
+      query: query,
+      variables: %{
+        repoOwner: repo_owner,
+        repoName: repo_name
+      }
+    }
 
-    (@base_url <> "/graphql")
-    |> HTTPoison.post(body, graphql_headers())
-    |> case do
-      {:ok, %{status_code: 200, body: body}} ->
-        map_requestable_users_response(body)
-
+    with {:ok, body} <- Jason.encode(request),
+         {:ok, %{status_code: 200, body: body}} <- HTTPoison.post(@base_url <> "/graphql", body, graphql_headers()) do
+      map_requestable_users(body)
+    else
       _ ->
         :timer.sleep(retry_delay())
         fetch_requestable_users(repo, try_count + 1)
     end
   end
 
-  defp map_requestable_users_response(body) do
-    body
-    |> Poison.decode()
-    |> map_requestable_users()
+  defp map_requestable_users(body) do
+    case Jason.decode(body) do
+      {:ok, data} when is_map(data) ->
+        data
+        |> get_in(["data", "repository", "assignableUsers", "nodes"])
+        |> Enum.map(fn %{"login" => username, "name" => fullname} -> %User{username: username, fullname: fullname} end)
+
+      _ ->
+        []
+    end
   end
 
-  defp map_requestable_users({:ok, data}) do
-    data
-    |> get_in(["data", "repository", "assignableUsers", "nodes"])
-    |> Enum.map(fn %{"login" => username, "name" => fullname} -> %User{username: username, fullname: fullname} end)
+  def fetch_contributors(repo, try_count \\ 0)
+
+  def fetch_contributors(_, try_count) when try_count > @retry_count do
+    []
   end
 
-  defp map_requestable_users(_), do: []
-
-  def fetch_contributors(repo) do
-    fetch_contributors(repo, 0)
-  end
-
-  defp fetch_contributors(_, try_count) when try_count > @retry_count, do: []
-
-  defp fetch_contributors(repo, try_count) do
+  def fetch_contributors(repo, try_count) do
     (@base_url <> "/repos/#{repo}/stats/contributors")
     |> HTTPoison.get(rest_headers())
     |> case do
       {:ok, %{status_code: 200, body: body}} ->
-        map_contributors_response(body)
+        map_contributors(body)
 
       _ ->
         :timer.sleep(retry_delay())
@@ -138,30 +124,34 @@ defmodule Dispatch.Repositories.GitHubClient do
     end
   end
 
-  defp map_contributors_response(body) do
-    body
-    |> Poison.decode()
-    |> map_contributors()
-  end
+  defp map_contributors(body) do
+    case Jason.decode(body) do
+      {:ok, contributors} when is_list(contributors) ->
+        contributors
+        |> Enum.map(fn
+          %{"author" => %{"login" => username}} = contributor ->
+            {total, recent_commit_count, relevancy} = Contributors.calculate_relevancy(contributor)
 
-  defp map_contributors({:ok, contributors}) when is_list(contributors) do
-    contributors
-    |> Enum.map(fn
-      %{"author" => %{"login" => username}} = contributor ->
-        {total, recent_commit_count, relevancy} = Contributors.calculate_relevancy(contributor)
+            %Contributor{
+              username: username,
+              relevancy: relevancy,
+              recent_commit_count: recent_commit_count,
+              total_commit_count: total
+            }
 
-        %Contributor{username: username, relevancy: relevancy, recent_commit_count: recent_commit_count, total_commit_count: total}
+          _ ->
+            nil
+        end)
+        |> Enum.reject(&is_nil/1)
 
       _ ->
-        nil
-    end)
-    |> Enum.reject(&is_nil/1)
+        []
+    end
   end
-
-  defp map_contributors(_), do: []
 
   defp retry_delay, do: Application.get_env(:dispatch, __MODULE__)[:retry_delay]
   defp access_token, do: Application.get_env(:dispatch, __MODULE__)[:access_token]
+
   defp graphql_headers, do: [{"Authorization", "bearer #{access_token()}"}]
   defp rest_headers, do: [{"Authorization", "token #{access_token()}"}]
 end

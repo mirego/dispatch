@@ -1,8 +1,6 @@
 defmodule Dispatch.Repositories.Contributors do
-  alias Dispatch.Repositories.Contributor
   alias Dispatch.SelectedUser
-  alias Dispatch.Utils.Random
-  alias Dispatch.Utils.TimeHelper
+  alias Dispatch.Utils.{Random, TimeHelper}
 
   @doc """
   Loop through each contributors and randomly select one based on his relevancy
@@ -26,30 +24,30 @@ defmodule Dispatch.Repositories.Contributors do
   def select([]), do: []
 
   def select(contributors) do
-    total = Enum.reduce(contributors, 0, fn %{relevancy: relevancy}, acc -> relevancy + acc end)
-    random_pick_index = Random.uniform(total)
+    random_pick_index =
+      contributors
+      |> Enum.reduce(0, fn %{relevancy: relevancy}, acc -> relevancy + acc end)
+      |> Random.uniform()
 
-    Enum.reduce_while(contributors, random_pick_index, &process_contributor/2)
-  end
+    Enum.reduce_while(contributors, random_pick_index, fn contributor, acc ->
+      acc = acc - contributor.relevancy
 
-  defp process_contributor(%Contributor{username: username, relevancy: relevancy, recent_commit_count: recent_commit_count, total_commit_count: total_commit_count}, acc) do
-    acc = acc - relevancy
-
-    if acc <= 0 do
-      {:halt,
-       [
-         %SelectedUser{
-           username: username,
-           type: "contributor",
-           metadata: %{
-             recent_commit_count: recent_commit_count,
-             total_commit_count: total_commit_count
+      if acc <= 0 do
+        {:halt,
+         [
+           %SelectedUser{
+             username: contributor.username,
+             type: "contributor",
+             metadata: %{
+               recent_commit_count: contributor.recent_commit_count,
+               total_commit_count: contributor.total_commit_count
+             }
            }
-         }
-       ]}
-    else
-      {:cont, acc}
-    end
+         ]}
+      else
+        {:cont, acc}
+      end
+    end)
   end
 
   @doc """
@@ -74,15 +72,16 @@ defmodule Dispatch.Repositories.Contributors do
   end
 
   defp retrieve_relevant_week_commits(weeks) do
-    starting_week =
-      :dispatch
-      |> Application.get_env(Dispatch.Repositories.Contributors)
-      |> Keyword.get(:relevant_activity_days)
-      |> TimeHelper.unix_beginning_of_week()
+    starting_week = TimeHelper.unix_beginning_of_week(relevant_activity_days())
 
-    Enum.reduce(weeks, 0, &process_week(&1, &2, starting_week))
+    Enum.reduce(weeks, 0, fn
+      %{"w" => week, "c" => count}, acc when week >= starting_week ->
+        acc + count
+
+      _, acc ->
+        acc
+    end)
   end
 
-  defp process_week(%{"w" => week, "c" => count}, acc, starting_week) when week >= starting_week, do: acc + count
-  defp process_week(_, acc, _), do: acc
+  def relevant_activity_days, do: Application.get_env(:dispatch, __MODULE__)[:relevant_activity_days]
 end
