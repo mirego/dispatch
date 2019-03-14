@@ -94,7 +94,9 @@ defmodule Dispatch.Repositories.GitHubClient do
   end
 
   defp map_requestable_users(body) do
-    case Jason.decode(body) do
+    body
+    |> Jason.decode()
+    |> case do
       {:ok, data} when is_map(data) ->
         data
         |> get_in(["data", "repository", "assignableUsers", "nodes"])
@@ -125,7 +127,9 @@ defmodule Dispatch.Repositories.GitHubClient do
   end
 
   defp map_contributors(body) do
-    case Jason.decode(body) do
+    body
+    |> Jason.decode()
+    |> case do
       {:ok, contributors} when is_list(contributors) ->
         contributors
         |> Enum.map(fn
