@@ -5,9 +5,8 @@ deps/
 test/
 priv/static/
 
+*.md
 .*
 coveralls.json
 docker-compose.yml
 Makefile
-CODE_OF_CONDUCT.md
-README.md
