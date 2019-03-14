@@ -74,8 +74,8 @@ If an Absence.io iCal URL is provided, users that are out-of-office when a pull 
 
 ## 🚧 Dependencies
 
-* Elixir (`1.7.4`)
-* Erlang (`21.1.2`)
+* Elixir (`1.8.1`)
+* Erlang (`21.2.7`)
 
 ## 🏎 Setup
 
@@ -171,10 +171,31 @@ The most common reasons as to why there was fewer requested reviews that usual (
 
 ## 🚀 Deploy
 
-### Heroku
+The application can be deployed to Heroku following the [Container Registry & Runtime](https://devcenter.heroku.com/articles/container-registry-and-runtime) guide.
 
-The application can be deployed on Heroku using the [`heroku-buildpack-elixir`](https://github.com/HashNuke/heroku-buildpack-elixir.git) buildpack.
+### tl;dr
 
-### OTP release
+1. Create a docker image for the _OTP release_ (`DOCKER_IMAGE_TAG=latest` is the default value).
+    ```shell
+    > make build DOCKER_IMAGE_TAG=latest
+    ```
 
-An _OTP release_ can be created with `make build`.
+1. Tag the image for Heroky’s registry
+    ```shell
+    > docker tag dispatch:latest registry.heroku.com/dispatch/web
+    ```
+
+1. Login to the Heroku registry
+    ```shell
+    > heroku container:login
+    ```
+
+1. Push the image to the registry
+    ```shell
+    > docker push registry.heroku.com/dispatch/web
+    ```
+
+1. Release the image
+    ```shell
+    > heroku container:release web
+    ```

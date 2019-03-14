@@ -6,7 +6,7 @@ defmodule Dispatch.Mixfile do
       app: :dispatch,
       version: "1.0.3",
       elixir: "1.8.1",
-      erlang: "21.2.6",
+      erlang: "21.2.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_paths: ["test"],
       test_pattern: "**/*_test.exs",
@@ -50,10 +50,6 @@ defmodule Dispatch.Mixfile do
       # Errors
       {:sentry, "~> 6.2"},
 
-      # Linting
-      {:credo, "~> 1.0.0", only: [:dev, :test]},
-      {:credo_envvar, "~> 0.1.0", only: ~w(dev test)a, runtime: false},
-
       # Date/time management
       {:timex, "~> 3.1"},
 
@@ -63,12 +59,16 @@ defmodule Dispatch.Mixfile do
       # OTP Release
       {:distillery, "~> 2.0"},
 
-      # Test coverage
-      {:excoveralls, "~> 0.10", only: :test},
+      # Linting
+      {:credo, "~> 1.0.0", only: ~w(dev test)a, runtime: false},
+      {:credo_envvar, "~> 0.1.0", only: ~w(dev test)a, runtime: false},
 
       # Test
       {:mock, "~> 0.2.0", only: :test},
-      {:mox, "~> 0.4.0", only: :test}
+      {:mox, "~> 0.4.0", only: :test},
+
+      # Test coverage
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
