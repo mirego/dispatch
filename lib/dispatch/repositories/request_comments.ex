@@ -44,10 +44,7 @@ defmodule Dispatch.Repositories.RequestComments do
   end
 
   defp reviewer_line(%{username: username, type: "contributor", metadata: %{recent_commit_count: recent_commit_count, total_commit_count: total_commit_count}}) do
-    relevant_activity_days =
-      :dispatch
-      |> Application.get_env(Dispatch.Repositories.Contributors)
-      |> Keyword.get(:relevant_activity_days)
+    relevant_activity_days = Dispatch.Repositories.Contributors.relevant_activity_days()
 
     "* @#{username} (contributor with `#{recent_commit_count}` commits in the last #{relevant_activity_days} days and `#{total_commit_count}` commits overall)\n"
   end

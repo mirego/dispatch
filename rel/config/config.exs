@@ -54,7 +54,7 @@ config :dispatch, DispatchWeb.Endpoint,
   pubsub: [name: Dispatch.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures the Phoenix server
-config :phoenix, :json_library, Poison
+config :phoenix, :json_library, Jason
 
 # Configures Elixir's Logger
 config :logger, :console,

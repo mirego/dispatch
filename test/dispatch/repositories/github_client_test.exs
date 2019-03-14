@@ -3,9 +3,7 @@ defmodule Dispatch.Repositories.GitHubClientTest do
 
   import Mock
 
-  alias Dispatch.Repositories.Contributor
-  alias Dispatch.Repositories.GitHubClient
-  alias Dispatch.Repositories.User
+  alias Dispatch.Repositories.{Contributor, GitHubClient, User}
   alias Dispatch.SelectedUser
   alias Dispatch.Utils.TimeHelper
 

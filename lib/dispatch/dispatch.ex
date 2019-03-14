@@ -11,21 +11,25 @@ defmodule Dispatch do
 
   defmodule BlacklistedUser do
     @enforce_keys [:username]
+    @derive Jason.Encoder
     defstruct username: nil
   end
 
   defmodule Expert do
     @enforce_keys [:username]
+    @derive Jason.Encoder
     defstruct username: nil, type: nil, metadata: nil
   end
 
   defmodule Learner do
     @enforce_keys [:username, :exposure]
+    @derive Jason.Encoder
     defstruct username: nil, exposure: nil, metadata: nil
   end
 
   defmodule SelectedUser do
     @enforce_keys [:username, :type]
+    @derive Jason.Encoder
     defstruct username: nil, type: nil, metadata: nil
   end
 

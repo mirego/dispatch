@@ -1,11 +1,9 @@
 defmodule Dispatch.Settings.JSONStaticFileClient do
-  @behaviour Dispatch.Settings.ClientBehaviour
-
   use Agent
 
-  alias Dispatch.BlacklistedUser
-  alias Dispatch.Expert
-  alias Dispatch.Learner
+  @behaviour Dispatch.Settings.ClientBehaviour
+
+  alias Dispatch.{BlacklistedUser, Expert, Learner}
   alias Dispatch.Settings.ClientBehaviour
 
   defmodule State do
@@ -73,14 +71,9 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
          {:ok, %HTTPoison.Response{status_code: 200, body: body}} <- HTTPoison.get(path) do
       Jason.decode(body)
     else
-      _ ->
-        {:ok, %{}}
+      _ -> {:ok, %{}}
     end
   end
 
-  defp configuration_file_url do
-    :dispatch
-    |> Application.get_env(__MODULE__)
-    |> Keyword.get(:configuration_file_url)
-  end
+  defp configuration_file_url, do: Application.get_env(:dispatch, __MODULE__)[:configuration_file_url]
 end

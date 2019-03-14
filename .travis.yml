@@ -1,7 +1,7 @@
 language: 'elixir'
 
-elixir: 1.7.4
-otp_release: 21.1.2
+elixir: 1.8.1
+otp_release: 21.2.6
 
 cache:
   directories:
@@ -13,7 +13,7 @@ env:
     - MIX_ENV: test
 
 before_install:
-  - 'echo `curl --verbose http://jsonip.com`'
+  - 'echo `curl --verbose https://jsonip.com`'
 
 before_script:
   - 'mix compile'
