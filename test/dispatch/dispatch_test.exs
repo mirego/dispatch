@@ -261,4 +261,18 @@ defmodule DispatchTest do
 
     assert stacks == ["hcl", "ruby"]
   end
+
+  test "extract_from_params/1 with stacks in pull request body but no default ones, it should return them" do
+    body = """
+    This is my pull request! It adds a Terraform configuration file. Absolutely no GraphQL stuff to review.
+
+    Also, there are no default stacks in the webhook URL.
+
+    #dispatch/hcl #dispatch/Ruby
+    """
+
+    stacks = Dispatch.extract_from_params(%{"pull_request" => %{"body" => body}})
+
+    assert stacks == ["hcl", "ruby"]
+  end
 end

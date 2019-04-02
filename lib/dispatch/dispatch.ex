@@ -83,7 +83,9 @@ defmodule Dispatch do
   @doc """
   Extracts stacks from a Webhook payload received from GitHub
   """
-  def extract_from_params(%{"pull_request" => %{"body" => body}, "stacks" => default_stacks}) when is_binary(default_stacks) do
+  def extract_from_params(%{"pull_request" => %{"body" => body}} = params) do
+    default_stacks = Map.get(params, "stacks", "")
+
     ~r/#dispatch\/(\w+)/i
     |> Regex.scan(body, capture: :all_but_first)
     |> (fn
