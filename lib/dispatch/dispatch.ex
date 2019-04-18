@@ -99,7 +99,7 @@ defmodule Dispatch do
 
   def extract_from_params(_), do: []
 
-  def request_or_mention_reviewer?(%SelectedUser{type: type}) when type in ["contributor", "stack"], do: :request
+  def request_or_mention_reviewer?(%SelectedUser{type: type}) when type in ["contributor", "expert"], do: :request
   def request_or_mention_reviewer?(_), do: :mention
 
   defp update_requestable_usernames(requestable_usernames, reviewer_usernames) do

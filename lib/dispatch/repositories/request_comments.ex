@@ -16,16 +16,16 @@ defmodule Dispatch.Repositories.RequestComments do
   Given a list of 3 reviewers
 
   %{username: "John", type: "contributor", metadata: %{relevancy: "23/99"}}
-  %{username: "Jane", type: "stack", metadata: %{stack: "elixir"}}
-  %{username: "Joe", type: "stack", metadata: %{stack: "graphql"}}
+  %{username: "Jane", type: "expert", metadata: %{stack: "elixir"}}
+  %{username: "Joe", type: "expert", metadata: %{stack: "graphql"}}
   %{username: "Jerry", type: "learner"}
 
   So reviewers will be displayed like this:
 
   @John (contributor with 23% relevancy)
-  @Jane (reviewer for the elixir stack)
-  @Joe (reviewer for the graphql stack)
-  @Jerry (learner)
+  @Jane (expert reviewer for the elixir stack)
+  @Joe (expert reviewer for the graphql stack)
+  @Jerry (learner reviewer)
   """
   def request_comment(reviewers) do
     requested_reviewer_lines =
@@ -49,15 +49,19 @@ defmodule Dispatch.Repositories.RequestComments do
     "* @#{username} (contributor with `#{recent_commit_count}` commits in the last #{relevant_activity_days} days and `#{total_commit_count}` commits overall)\n"
   end
 
-  defp reviewer_line(%{username: username, type: "stack", metadata: %{stack: stack}}) do
-    "* @#{username} (reviewer for the `#{stack}` stack)\n"
+  defp reviewer_line(%{username: username, type: "expert", metadata: %{stack: stack}}) do
+    "* @#{username} (expert reviewer for the `#{stack}` stack)\n"
   end
 
   defp reviewer_line(%{username: username, type: "learner", metadata: %{stack: stack}}) do
-    "* @#{username} (learner for the `#{stack}` stack)\n"
+    "* @#{username} (learner reviewer for the `#{stack}` stack)\n"
+  end
+
+  defp reviewer_line(%{username: username, type: "contributor"}) do
+    "* @#{username} (contributor)\n"
   end
 
   defp reviewer_line(%{username: username, type: type}) do
-    "* @#{username} (#{type})\n"
+    "* @#{username} (#{type} reviewer)\n"
   end
 end

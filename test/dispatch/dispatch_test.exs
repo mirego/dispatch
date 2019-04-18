@@ -47,7 +47,7 @@ defmodule DispatchTest do
              },
              %SelectedUser{
                metadata: %{stack: "graphql"},
-               type: "stack",
+               type: "expert",
                username: "biz"
              }
            ]
