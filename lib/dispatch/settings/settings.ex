@@ -44,7 +44,7 @@ defmodule Dispatch.Settings do
   end
 
   defp add_to_experts(acc, users, stack) do
-    users = Enum.map(users, &%Expert{username: &1, type: "stack", metadata: %{stack: stack}})
+    users = Enum.map(users, &%Expert{username: &1, type: "expert", metadata: %{stack: stack}})
 
     update_in(acc, [:experts], &(&1 ++ users))
   end

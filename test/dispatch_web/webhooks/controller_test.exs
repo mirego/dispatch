@@ -158,7 +158,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                      1,
                                      [
                                        %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                       %SelectedUser{username: "biz", type: "stack", metadata: %{stack: "graphql"}}
+                                       %SelectedUser{username: "biz", type: "expert", metadata: %{stack: "graphql"}}
                                      ] ->
       :ok
     end)
@@ -166,7 +166,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                           1,
                                           [
                                             %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                            %SelectedUser{username: "biz", type: "stack", metadata: %{stack: "graphql"}},
+                                            %SelectedUser{username: "biz", type: "expert", metadata: %{stack: "graphql"}},
                                             %SelectedUser{username: "pif", type: "learner", metadata: %{stack: "elixir"}}
                                           ] ->
       :ok
@@ -198,7 +198,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                },
                %{
                  "metadata" => %{"stack" => "graphql"},
-                 "type" => "stack",
+                 "type" => "expert",
                  "username" => "biz"
                },
                %{
@@ -226,7 +226,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                      1,
                                      [
                                        %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                       %SelectedUser{username: "ruby-master", type: "stack", metadata: %{stack: "ruby"}}
+                                       %SelectedUser{username: "ruby-master", type: "expert", metadata: %{stack: "ruby"}}
                                      ] ->
       :ok
     end)
@@ -234,7 +234,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                           1,
                                           [
                                             %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                            %SelectedUser{username: "ruby-master", type: "stack", metadata: %{stack: "ruby"}},
+                                            %SelectedUser{username: "ruby-master", type: "expert", metadata: %{stack: "ruby"}},
                                             %SelectedUser{username: "ruby-learner", type: "learner", metadata: %{stack: "ruby"}}
                                           ] ->
       :ok
@@ -261,7 +261,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                },
                %{
                  "metadata" => %{"stack" => "ruby"},
-                 "type" => "stack",
+                 "type" => "expert",
                  "username" => "ruby-master"
                },
                %{
