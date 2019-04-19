@@ -1,4 +1,4 @@
-defmodule Dispatch.AbsenceIOTest do
+defmodule Dispatch.AbsencesTest do
   use ExUnit.Case
 
   import Mox
