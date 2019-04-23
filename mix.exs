@@ -62,6 +62,7 @@ defmodule Dispatch.Mixfile do
       # Linting
       {:credo, "~> 1.0.0", only: ~w(dev test)a, runtime: false},
       {:credo_envvar, "~> 0.1.0", only: ~w(dev test)a, runtime: false},
+      {:credo_filename_consistency, "~> 0.1.0", only: [:dev, :test], runtime: false},
 
       # Test
       {:mock, "~> 0.2.0", only: :test},
