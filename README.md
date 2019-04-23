@@ -89,7 +89,7 @@ When running `mix` or `make` commands, all of these variables must be present in
 
 1. Create an `.env.dev.local` file from [`.env.dev`](./.env.dev)
 2. Install Mix dependencies with `make dependencies`
-3. Compile the application `make compile`
+3. Compile the application `mix compile`
 4. Start a Phoenix development server with `iex -S mix phx.server` after loading `.env.dev` and `.env.dev.local` files into the environment
 
 ### `make` commands
