@@ -86,7 +86,7 @@ defmodule Dispatch do
   def extract_from_params(%{"pull_request" => %{"body" => body}} = params) do
     default_stacks = Map.get(params, "stacks", "")
 
-    ~r/#dispatch\/(\w+)/i
+    ~r/#dispatch\/([\w.]+)/i
     |> Regex.scan(body, capture: :all_but_first)
     |> (fn
           [] -> String.split(default_stacks, ",")
