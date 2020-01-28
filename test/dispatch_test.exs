@@ -268,11 +268,11 @@ defmodule DispatchTest do
 
     Also, there are no default stacks in the webhook URL.
 
-    #dispatch/hcl #dispatch/Ruby
+    #dispatch/hcl #dispatch/Ruby #dispatch/node.js
     """
 
     stacks = Dispatch.extract_from_params(%{"pull_request" => %{"body" => body}})
 
-    assert stacks == ["hcl", "ruby"]
+    assert stacks == ["hcl", "ruby", "node.js"]
   end
 end
