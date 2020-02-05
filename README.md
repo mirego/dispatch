@@ -74,8 +74,8 @@ If an Absence.io iCal URL is provided, users that are out-of-office when a pull 
 
 ## 🚧 Dependencies
 
-* Elixir (`1.8.1`)
-* Erlang (`21.2.7`)
+- Elixir (`1.8.1`)
+- Erlang (`21.2.5`)
 
 ## 🏎 Setup
 
