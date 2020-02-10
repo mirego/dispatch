@@ -49,6 +49,13 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     assert json_response(conn, 200) == %{"success" => true, "noop" => true}
   end
 
+  test "POST /webhooks with a draft pull request", %{conn: conn} do
+    params = %{"stacks" => "elixir,graphql", "action" => "opened", "pull_request" => %{"draft" => true}}
+    conn = post(conn, "/webhooks", params)
+
+    assert json_response(conn, 200) == %{"success" => true, "noop" => true}
+  end
+
   test "POST /webhooks with pull request from bots", %{conn: conn} do
     params = %{"stacks" => "elixir,graphql", "action" => "opened", "pull_request" => %{"user" => %{"type" => "Bot"}}}
     conn = post(conn, "/webhooks", params)
@@ -348,6 +355,44 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
              "success" => true,
              "noop" => false,
              "reviewers" => []
+           }
+  end
+
+  test "POST /webhooks with a ready for review pull request", %{conn: conn} do
+    params = %{
+      "action" => "ready_for_review",
+      "number" => 1,
+      "repository" => %{"full_name" => "mirego/foo", "owner" => %{"login" => "mirego"}},
+      "pull_request" => %{"user" => %{"login" => "remiprev"}, "body" => "Foo"}
+    }
+
+    Dispatch.Repositories.MockClient
+    |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
+    |> expect(:fetch_contributors, fn "mirego/foo" -> @contributors end)
+    |> expect(:request_reviewers, fn "mirego/foo", 1, [%SelectedUser{username: "bar", type: "contributor"}] -> :ok end)
+    |> expect(:create_request_comment, fn "mirego/foo", 1, [%SelectedUser{username: "bar", type: "contributor"}] -> :ok end)
+
+    Dispatch.Settings.MockClient
+    |> expect(:refresh, fn -> true end)
+    |> expect(:blacklisted_users, fn -> [] end)
+
+    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+
+    conn = post(conn, "/webhooks", params)
+
+    assert json_response(conn, 200) == %{
+             "success" => true,
+             "noop" => false,
+             "reviewers" => [
+               %{
+                 "metadata" => %{
+                   "recent_commit_count" => 1,
+                   "total_commit_count" => 1
+                 },
+                 "type" => "contributor",
+                 "username" => "bar"
+               }
+             ]
            }
   end
 end

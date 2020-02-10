@@ -6,22 +6,26 @@ defmodule DispatchWeb.Webhooks.Controller do
   def create(conn, %{"action" => "opened", "pull_request" => %{"title" => "[WIP]" <> _}}), do: json(conn, %{success: true, noop: true})
 
   def create(conn, %{"action" => "opened", "pull_request" => %{"user" => %{"type" => "Bot"}}}), do: json(conn, %{success: true, noop: true})
+  def create(conn, %{"action" => "opened", "pull_request" => %{"draft" => true}}), do: json(conn, %{success: true, noop: true})
 
-  def create(conn, %{"action" => "opened", "repository" => %{"owner" => %{"login" => repo_owner}}} = params) do
+  def create(conn, %{"action" => "opened", "repository" => %{"owner" => %{"login" => repo_owner}}} = params), do: create_if_owner(conn, params, repo_owner)
+  def create(conn, %{"action" => "ready_for_review", "repository" => %{"owner" => %{"login" => repo_owner}}} = params), do: create_if_owner(conn, params, repo_owner)
+
+  def create(conn, _), do: json(conn, %{success: true, noop: true})
+
+  defp create_if_owner(conn, params, repo_owner) do
     github_organization_login = github_organization_login()
 
     case repo_owner do
       ^github_organization_login ->
-        do_create(conn, params)
+        assign_reviewers(conn, params)
 
       _ ->
         json(conn, %{success: true, noop: true})
     end
   end
 
-  def create(conn, _), do: json(conn, %{success: true, noop: true})
-
-  defp do_create(conn, params) do
+  defp assign_reviewers(conn, params) do
     pull_request_number = get_in(params, ["number"])
     author = get_in(params, ["pull_request", "user", "login"])
     repo = get_in(params, ["repository", "full_name"])
