@@ -6,8 +6,9 @@ defmodule DispatchWeb.Webhooks.Controller do
   def create(conn, %{"action" => "opened", "pull_request" => %{"title" => "[WIP]" <> _}}), do: json(conn, %{success: true, noop: true})
 
   def create(conn, %{"action" => "opened", "pull_request" => %{"user" => %{"type" => "Bot"}}}), do: json(conn, %{success: true, noop: true})
+  def create(conn, %{"action" => "opened", "pull_request" => %{"draft" => true}}), do: json(conn, %{success: true, noop: true})
 
-  def create(conn, %{"action" => "opened", "repository" => %{"owner" => %{"login" => repo_owner}}} = params) do
+  def create(conn, %{"action" => action, "repository" => %{"owner" => %{"login" => repo_owner}}} = params) when action in ~w(opened ready_for_review) do
     github_organization_login = github_organization_login()
 
     case repo_owner do
