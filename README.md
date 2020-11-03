@@ -54,7 +54,7 @@ When a pull request is opened, Dispatch selects a list of users that will be req
 
 ### Ignoring pull requests
 
-Pull requests that do not belong to repositories inside the configured organization or with a title that begins with `WIP `, `WIP:` or `[WIP] ` will be ignored.
+Draft pull requests or pull requests with a title that begins with `WIP `, `WIP:` or `[WIP] ` will be ignored. Pull requests that do not belong to repositories inside the configured organization will also be ignored.
 
 ### Pull request-specific stacks
 
