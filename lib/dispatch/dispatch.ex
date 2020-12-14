@@ -9,7 +9,7 @@ defmodule Dispatch do
   alias Dispatch.Settings
   alias Dispatch.Utils.Normalization
 
-  defmodule BlacklistedUser do
+  defmodule BlocklistedUser do
     @enforce_keys [:username]
     @derive Jason.Encoder
     defstruct username: nil
@@ -37,7 +37,7 @@ defmodule Dispatch do
   Returns a list of usernames that should be request to review the pull request
   """
   def fetch_selected_users(repo, stacks, author_username, disable_learners \\ false) do
-    excluded_usernames = [author_username | Enum.map(Settings.blacklisted_users(), & &1.username)]
+    excluded_usernames = [author_username | Enum.map(Settings.blocklisted_users(), & &1.username)]
 
     # 1. Refresh settings
     Settings.refresh()

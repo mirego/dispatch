@@ -3,12 +3,12 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
 
   @behaviour Dispatch.Settings.ClientBehaviour
 
-  alias Dispatch.{BlacklistedUser, Expert, Learner}
+  alias Dispatch.{BlocklistedUser, Expert, Learner}
   alias Dispatch.Settings.ClientBehaviour
 
   defmodule State do
-    @enforce_keys ~w(experts learners blacklist)a
-    defstruct experts: nil, learners: nil, blacklist: nil
+    @enforce_keys ~w(experts learners blocklist)a
+    defstruct experts: nil, learners: nil, blocklist: nil
   end
 
   def start_link do
@@ -34,10 +34,10 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
   end
 
   @impl ClientBehaviour
-  def blacklisted_users do
+  def blocklisted_users do
     __MODULE__
-    |> Agent.get(& &1.blacklist)
-    |> Enum.map(&%BlacklistedUser{username: &1["username"]})
+    |> Agent.get(& &1.blocklist)
+    |> Enum.map(&%BlocklistedUser{username: &1["username"]})
   end
 
   @impl ClientBehaviour
@@ -62,7 +62,7 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
     %State{
       learners: Map.get(configuration, "learners", %{}),
       experts: Map.get(configuration, "experts", %{}),
-      blacklist: Map.get(configuration, "blacklist", [])
+      blocklist: Map.get(configuration, "blocklist", [])
     }
   end
 

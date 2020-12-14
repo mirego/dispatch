@@ -1,7 +1,7 @@
 defmodule Dispatch.Settings do
   alias Dispatch.Expert
 
-  def blacklisted_users, do: client().blacklisted_users()
+  def blocklisted_users, do: client().blocklisted_users()
   def expert_users(stack), do: client().expert_users(stack)
   def learner_users(stack), do: client().learner_users(stack)
   def refresh, do: client().refresh()
