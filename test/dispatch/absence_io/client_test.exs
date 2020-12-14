@@ -1,9 +1,9 @@
-defmodule Dispatch.Absences.AbsenceIOClientTest do
+defmodule Dispatch.AbsenceIO.ClientTest do
   use ExUnit.Case, async: false
 
   import Mock
 
-  alias Dispatch.Absences.AbsenceIOClient
+  alias Dispatch.AbsenceIO.Client, as: AbsenceIOClient
 
   defp ical_feed_url, do: Application.get_env(:dispatch, AbsenceIOClient)[:ical_feed_url]
 

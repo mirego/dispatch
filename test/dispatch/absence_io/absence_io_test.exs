@@ -1,9 +1,9 @@
-defmodule Dispatch.AbsencesTest do
+defmodule Dispatch.AbsenceIOTest do
   use ExUnit.Case
 
   import Mox
 
-  alias Dispatch.Absences
+  alias Dispatch.AbsenceIO
   alias Timex.Duration
 
   setup :verify_on_exit!
@@ -29,9 +29,9 @@ defmodule Dispatch.AbsencesTest do
       }
     ]
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> events end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> events end)
 
-    results = Absences.absent_fullnames()
+    results = AbsenceIO.absent_fullnames()
 
     assert results == ["supaidaman", "swamp thing"]
   end
@@ -57,17 +57,17 @@ defmodule Dispatch.AbsencesTest do
       }
     ]
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> events end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> events end)
 
-    results = Absences.absent_fullnames()
+    results = AbsenceIO.absent_fullnames()
 
     assert results == ["john doe"]
   end
 
   test "absents/0 return empty list on no absents" do
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
-    results = Absences.absent_fullnames()
+    results = AbsenceIO.absent_fullnames()
 
     assert results == []
   end

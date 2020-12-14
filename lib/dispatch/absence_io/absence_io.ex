@@ -1,4 +1,4 @@
-defmodule Dispatch.Absences do
+defmodule Dispatch.AbsenceIO do
   alias Dispatch.Utils.Normalization
 
   def absent_fullnames do
@@ -15,5 +15,5 @@ defmodule Dispatch.Absences do
   defp extract_fullname(%ExIcal.Event{summary: "Out of Office - " <> fullname}), do: Normalization.normalize(fullname)
   defp extract_fullname(_), do: nil
 
-  defp client, do: Application.get_env(:dispatch, Dispatch)[:absences_client]
+  defp client, do: Application.get_env(:dispatch, Dispatch)[:absence_io_client]
 end

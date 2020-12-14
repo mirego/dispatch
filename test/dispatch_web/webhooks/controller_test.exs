@@ -98,7 +98,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     |> expect(:blocklisted_users, fn -> [] end)
     |> expect(:expert_users, fn "elixir" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     conn = post(conn, "/webhooks", params)
 
@@ -136,7 +136,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     conn = post(conn, "/webhooks", params)
 
@@ -194,7 +194,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     |> expect(:learner_users, fn "elixir" -> [%Learner{username: "paf", exposure: 0}, %Learner{username: "pif", exposure: 1}] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     conn = post(conn, "/webhooks", params)
 
@@ -260,7 +260,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     |> expect(:expert_users, fn "ruby" -> [%Expert{username: "ruby-master"}] end)
     |> expect(:learner_users, fn "ruby" -> [%Learner{username: "ruby-learner", exposure: 1}] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     conn = post(conn, "/webhooks", params)
 
@@ -310,7 +310,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     conn = post(conn, "/webhooks", params)
     assert json_response(conn, 200) == %{"success" => false, "noop" => false}
@@ -347,7 +347,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     conn = post(conn, "/webhooks", params)
 
@@ -376,7 +376,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     conn = post(conn, "/webhooks", params)
 

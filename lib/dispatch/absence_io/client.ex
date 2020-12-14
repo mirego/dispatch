@@ -1,5 +1,5 @@
-defmodule Dispatch.Absences.AbsenceIOClient do
-  @behaviour Dispatch.Absences.ClientBehaviour
+defmodule Dispatch.AbsenceIO.Client do
+  @behaviour Dispatch.AbsenceIO.ClientBehaviour
 
   def fetch_absents do
     ical_feed_url()

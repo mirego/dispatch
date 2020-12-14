@@ -91,7 +91,7 @@ config :dispatch, DispatchWeb.Webhooks, github_organization_login: Environment.g
 config :dispatch, Dispatch,
   repositories_client: Dispatch.Repositories.GitHubClient,
   settings_client: Dispatch.Settings.JSONStaticFileClient,
-  absences_client: Dispatch.Absences.AbsenceIOClient
+  absences_client: Dispatch.AbsenceIO.Client
 
 config :dispatch, Dispatch.Repositories.Contributors, relevant_activity_days: 90
 
@@ -99,6 +99,6 @@ config :dispatch, Dispatch.Repositories.GitHubClient,
   access_token: Environment.get("GITHUB_ACCESS_TOKEN"),
   retry_delay: 1000
 
-config :dispatch, Dispatch.Absences.AbsenceIOClient, ical_feed_url: Environment.get("ABSENCEIO_ICAL_FEED_URL")
+config :dispatch, Dispatch.AbsenceIO.Client, ical_feed_url: Environment.get("ABSENCEIO_ICAL_FEED_URL")
 
 config :dispatch, Dispatch.Settings.JSONStaticFileClient, configuration_file_url: Environment.get("CONFIGURATION_FILE_URL")

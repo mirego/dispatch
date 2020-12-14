@@ -35,7 +35,7 @@ defmodule DispatchTest do
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     selected_users = Dispatch.fetch_selected_users("mirego/foo", ["elixir", "graphql"], "omg")
 
@@ -72,7 +72,7 @@ defmodule DispatchTest do
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     selected_users = Dispatch.fetch_selected_users("mirego/foo", ["elixir", "graphql"], "omg")
 
@@ -106,7 +106,7 @@ defmodule DispatchTest do
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn ->
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn ->
       [
         %ExIcal.Event{
           start: Timex.subtract(now, Duration.from_minutes(60)),
@@ -142,7 +142,7 @@ defmodule DispatchTest do
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     selected_users = Dispatch.fetch_selected_users("mirego/foo", [], "omg")
 
@@ -171,7 +171,7 @@ defmodule DispatchTest do
     |> expect(:expert_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     selected_users = Dispatch.fetch_selected_users("mirego/foo", ["elixir"], "omg")
 
@@ -195,7 +195,7 @@ defmodule DispatchTest do
     |> expect(:expert_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     selected_users = Dispatch.fetch_selected_users("mirego/foo", ["elixir"], "omg")
 
@@ -220,7 +220,7 @@ defmodule DispatchTest do
       ]
     end)
 
-    expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
+    expect(Dispatch.AbsenceIO.MockClient, :fetch_absents, fn -> [] end)
 
     selected_users = Dispatch.fetch_selected_users("mirego/foo", ["elixir"], "omg")
 
