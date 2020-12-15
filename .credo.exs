@@ -54,7 +54,7 @@
         {Credo.Check.Warning.UnusedTupleOperation},
         {Credo.Check.Warning.OperationWithConstantResult},
         {CredoEnvvar.Check.Warning.EnvironmentVariablesAtCompileTime},
-        {CredoFilenameConsistency.Check.Consistency.FilenameConsistency, excluded_paths: ["test/support"], acronyms: [{"GitHub", "github"}, {"AbsenceIO", "absenceio"}]}
+        {CredoNaming.Check.Consistency.ModuleFilename, excluded_paths: ["test/support"], acronyms: [{"GitHub", "github"}, {"AbsenceIO", "absenceio"}]}
       ]
     }
   ]
