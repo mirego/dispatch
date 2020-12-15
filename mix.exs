@@ -4,7 +4,7 @@ defmodule Dispatch.Mixfile do
   def project do
     [
       app: :dispatch,
-      version: "1.0.3",
+      version: "1.1.0",
       elixir: "1.8.1",
       erlang: "21.2.5",
       elixirc_paths: elixirc_paths(Mix.env()),
