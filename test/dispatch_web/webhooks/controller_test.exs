@@ -3,7 +3,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
   import Mox
 
-  alias Dispatch.BlacklistedUser
+  alias Dispatch.BlocklistedUser
   alias Dispatch.Expert
   alias Dispatch.Learner
   alias Dispatch.SelectedUser
@@ -95,7 +95,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
     |> expect(:expert_users, fn "elixir" -> [] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
@@ -134,7 +134,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
 
@@ -188,7 +188,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [%BlacklistedUser{username: "foo"}] end)
+    |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
     |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
     |> expect(:expert_users, fn "graphql" -> [%Expert{username: "biz"}, %Expert{username: "omg"}] end)
     |> expect(:learner_users, fn "elixir" -> [%Learner{username: "paf", exposure: 0}, %Learner{username: "pif", exposure: 1}] end)
@@ -256,7 +256,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [%BlacklistedUser{username: "foo"}] end)
+    |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
     |> expect(:expert_users, fn "ruby" -> [%Expert{username: "ruby-master"}] end)
     |> expect(:learner_users, fn "ruby" -> [%Learner{username: "ruby-learner", exposure: 1}] end)
 
@@ -304,7 +304,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
     |> expect(:expert_users, fn "elixir" -> [] end)
     |> expect(:expert_users, fn "graphql" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
@@ -345,7 +345,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
 
@@ -374,7 +374,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
 

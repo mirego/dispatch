@@ -9,7 +9,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     body = """
     {
       "learners": {},
-      "blacklist": {},
+      "blocklist": {},
       "experts": {}
     }
     """
@@ -33,7 +33,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
           }
         ]
       },
-      "blacklist": [],
+      "blocklist": [],
       "experts": {}
     }
     """
@@ -50,7 +50,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     body = """
     {
       "learners": {},
-      "blacklist": [],
+      "blocklist": [],
       "experts": {
         "elixir": [
           {
@@ -69,7 +69,28 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     end
   end
 
-  test "blacklist" do
+  test "blocklist" do
+    body = """
+    {
+      "learners": {},
+      "blocklist": [
+        {
+          "username": "test"
+        }
+      ],
+      "experts": {}
+    }
+    """
+
+    with_mock HTTPoison, get: fn _ -> {:ok, %HTTPoison.Response{status_code: 200, body: body}} end do
+      Client.refresh()
+
+      users = Client.blocklisted_users()
+      assert users === [%Dispatch.BlocklistedUser{username: "test"}]
+    end
+  end
+
+  test "deprecated blacklist" do
     body = """
     {
       "learners": {},
@@ -85,8 +106,8 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     with_mock HTTPoison, get: fn _ -> {:ok, %HTTPoison.Response{status_code: 200, body: body}} end do
       Client.refresh()
 
-      users = Client.blacklisted_users()
-      assert users === [%Dispatch.BlacklistedUser{username: "test"}]
+      users = Client.blocklisted_users()
+      assert users === [%Dispatch.BlocklistedUser{username: "test"}]
     end
   end
 
@@ -97,7 +118,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
         "elixir": [],
         "javascript": []
       },
-      "blacklist": [],
+      "blocklist": [],
       "experts": {
         "javascript": [],
         "react": []
@@ -121,13 +142,13 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
       Client.refresh()
 
       stacks = Client.stacks()
-      blacklisted = Client.blacklisted_users()
+      blocklisted = Client.blocklisted_users()
       experts = Client.expert_users("elixir")
       learners = Client.learner_users("elixir")
 
       assert length(learners) === 0
       assert length(experts) === 0
-      assert length(blacklisted) === 0
+      assert length(blocklisted) === 0
       assert length(stacks) === 0
     end
   end

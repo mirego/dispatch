@@ -60,9 +60,9 @@ Draft pull requests or pull requests with a title that begins with `WIP `, `WIP:
 
 From time to time, it can be useful to pass some specific stacks for a single pull request that differ from the ones used in the Webhook URL. `#dispatch/<stack>` tags can be added to the pull request body and Dispatch will use them as stacks instead of the default ones (configured in the webhook URL).
 
-### Contributors blacklist
+### Contributors blocklist
 
-GitHub users listed in `blacklist` will never be requested for a review nor mentionned.
+GitHub users listed in `blocklist` will never be requested for a review nor mentionned.
 
 ### Learners
 
@@ -116,17 +116,17 @@ The `priv/scripts/ci-check.sh` script runs a few commands (tests, lint, etc.) to
 
 ## 🏗 Code & architecture
 
-### Experts, learners and blacklisted users
+### Experts, learners and blocklisted users
 
 The configuration file stored at `CONFIGURATION_FILE_URL` should contain a JSON object with three keys:
 
-* `blacklist`
+* `blocklist`
 * `experts`
 * `learners`
 
 ```json
 {
-  "blacklist": [
+  "blocklist": [
     {
       "username": "github_username"
     }

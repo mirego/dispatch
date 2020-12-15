@@ -3,7 +3,7 @@ defmodule DispatchTest do
 
   import Mox
 
-  alias Dispatch.BlacklistedUser
+  alias Dispatch.BlocklistedUser
   alias Dispatch.Expert
   alias Dispatch.Learner
   alias Dispatch.SelectedUser
@@ -16,7 +16,7 @@ defmodule DispatchTest do
 
   setup :verify_on_exit!
 
-  test "with blacklisted, random expert and random stack user" do
+  test "with blocklisted, random expert and random stack user" do
     Dispatch.Repositories.MockClient
     |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
     |> expect(:fetch_contributors, fn "mirego/foo" ->
@@ -29,7 +29,7 @@ defmodule DispatchTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [%BlacklistedUser{username: "foo"}] end)
+    |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
     |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
     |> expect(:expert_users, fn "graphql" -> [%Expert{username: "biz"}, %Expert{username: "foo"}] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
@@ -53,7 +53,7 @@ defmodule DispatchTest do
            ]
   end
 
-  test "with blacklisted, random reviewer and random stack user in contributors" do
+  test "with blocklisted, random reviewer and random stack user in contributors" do
     Dispatch.Repositories.MockClient
     |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
     |> expect(:fetch_contributors, fn "mirego/foo" ->
@@ -66,7 +66,7 @@ defmodule DispatchTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [%BlacklistedUser{username: "foo"}] end)
+    |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
     |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
     |> expect(:expert_users, fn "graphql" -> [%Expert{username: "bar"}, %Expert{username: "foo"}] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
@@ -85,7 +85,7 @@ defmodule DispatchTest do
            ]
   end
 
-  test "with blacklisted and absent, random reviewer and random stack user" do
+  test "with blocklisted and absent, random reviewer and random stack user" do
     now = Timex.now()
 
     Dispatch.Repositories.MockClient
@@ -100,7 +100,7 @@ defmodule DispatchTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [%BlacklistedUser{username: "foo"}] end)
+    |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
     |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
     |> expect(:expert_users, fn "graphql" -> [%Expert{username: "biz"}, %Expert{username: "omg"}] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
@@ -127,7 +127,7 @@ defmodule DispatchTest do
            ]
   end
 
-  test "with blacklisted, random reviewer and no stacks" do
+  test "with blocklisted, random reviewer and no stacks" do
     Dispatch.Repositories.MockClient
     |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
     |> expect(:fetch_contributors, fn "mirego/foo" ->
@@ -140,7 +140,7 @@ defmodule DispatchTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [%BlacklistedUser{username: "foo"}] end)
+    |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
 
@@ -155,7 +155,7 @@ defmodule DispatchTest do
            ]
   end
 
-  test "without blacklisted or stack users" do
+  test "without blocklisted or stack users" do
     Dispatch.Repositories.MockClient
     |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
     |> expect(:fetch_contributors, fn "mirego/foo" ->
@@ -167,7 +167,7 @@ defmodule DispatchTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
     |> expect(:expert_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
 
@@ -191,7 +191,7 @@ defmodule DispatchTest do
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
     |> expect(:expert_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
 
@@ -202,14 +202,14 @@ defmodule DispatchTest do
     assert selected_users == []
   end
 
-  test "with blacklisted, 2 out of 3 requestable learners selected via exposure" do
+  test "with blocklisted, 2 out of 3 requestable learners selected via exposure" do
     Dispatch.Repositories.MockClient
     |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
     |> expect(:fetch_contributors, fn "mirego/foo" -> [] end)
 
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
-    |> expect(:blacklisted_users, fn -> [] end)
+    |> expect(:blocklisted_users, fn -> [] end)
     |> expect(:expert_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" ->
       [
