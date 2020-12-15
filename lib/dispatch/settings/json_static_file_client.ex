@@ -62,7 +62,7 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
     %State{
       learners: Map.get(configuration, "learners", %{}),
       experts: Map.get(configuration, "experts", %{}),
-      blocklist: Map.get(configuration, "blocklist", [])
+      blocklist: Map.get(configuration, "blocklist", Map.get(configuration, "blacklist", []))
     }
   end
 

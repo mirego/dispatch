@@ -90,6 +90,27 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     end
   end
 
+  test "deprecated blacklist" do
+    body = """
+    {
+      "learners": {},
+      "blacklist": [
+        {
+          "username": "test"
+        }
+      ],
+      "experts": {}
+    }
+    """
+
+    with_mock HTTPoison, get: fn _ -> {:ok, %HTTPoison.Response{status_code: 200, body: body}} end do
+      Client.refresh()
+
+      users = Client.blocklisted_users()
+      assert users === [%Dispatch.BlocklistedUser{username: "test"}]
+    end
+  end
+
   test "stacks" do
     body = """
     {

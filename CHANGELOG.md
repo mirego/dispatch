@@ -10,6 +10,10 @@
 
 - _None_
 
-### 3. Breaking changes
+### 3. Deprecations
 
 - `blacklist` is replaced with `blocklist`
+
+### 4. Breaking changes
+
+- _None_
