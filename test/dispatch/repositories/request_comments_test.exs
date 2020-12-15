@@ -6,9 +6,9 @@ defmodule Dispatch.Repositories.RequestCommentsTest do
 
   test "request_comment/1 return the correct message for every selected users" do
     selected_users = [
-      %SelectedUser{username: "user-1", type: "expert", metadata: %{stack: "elixir"}},
-      %SelectedUser{username: "user-2", type: "expert", metadata: %{stack: "graphql"}},
-      %SelectedUser{username: "user-3", type: "expert", metadata: %{anything: "anything"}},
+      %SelectedUser{username: "user-1", type: "reviewer", metadata: %{stack: "elixir"}},
+      %SelectedUser{username: "user-2", type: "reviewer", metadata: %{stack: "graphql"}},
+      %SelectedUser{username: "user-3", type: "reviewer", metadata: %{anything: "anything"}},
       %SelectedUser{username: "user-4", type: "contributor", metadata: %{recent_commit_count: 20, total_commit_count: 256}},
       %SelectedUser{username: "user-5", type: "contributor", metadata: %{anything: "anything"}},
       %SelectedUser{username: "user-6", type: "learner"},
@@ -19,17 +19,17 @@ defmodule Dispatch.Repositories.RequestCommentsTest do
     expected_message = """
     **🦀 Requesting reviewers for this pull request:**
 
-    * @user-1 (expert reviewer for the `elixir` stack)
-    * @user-2 (expert reviewer for the `graphql` stack)
-    * @user-3 (expert reviewer)
+    * @user-1 (reviewer for the `elixir` stack)
+    * @user-2 (reviewer for the `graphql` stack)
+    * @user-3 (reviewer)
     * @user-4 (contributor with `20` commits in the last 90 days and `256` commits overall)
     * @user-5 (contributor)
 
     **🦀 Mentionning users for this pull request:**
 
-    * @user-6 (learner reviewer)
-    * @user-7 (learner reviewer for the `elixir` stack)
-    * @user-8 (learner reviewer for the `graphql` stack)
+    * @user-6 (learner)
+    * @user-7 (learner for the `elixir` stack)
+    * @user-8 (learner for the `graphql` stack)
     """
 
     result = RequestComments.request_comment(selected_users)
@@ -38,14 +38,14 @@ defmodule Dispatch.Repositories.RequestCommentsTest do
 
   test "request_comment/1 return the correct message without learners" do
     selected_users = [
-      %SelectedUser{username: "user-1", type: "expert", metadata: %{stack: "elixir"}},
+      %SelectedUser{username: "user-1", type: "reviewer", metadata: %{stack: "elixir"}},
       %SelectedUser{username: "user-4", type: "contributor", metadata: %{recent_commit_count: 20, total_commit_count: 256}}
     ]
 
     expected_message = """
     **🦀 Requesting reviewers for this pull request:**
 
-    * @user-1 (expert reviewer for the `elixir` stack)
+    * @user-1 (reviewer for the `elixir` stack)
     * @user-4 (contributor with `20` commits in the last 90 days and `256` commits overall)
     """
 

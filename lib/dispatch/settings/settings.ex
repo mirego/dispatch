@@ -1,26 +1,26 @@
 defmodule Dispatch.Settings do
-  alias Dispatch.Expert
+  alias Dispatch.Reviewer
 
   def blocklisted_users, do: client().blocklisted_users()
-  def expert_users(stack), do: client().expert_users(stack)
+  def reviewer_users(stack), do: client().reviewer_users(stack)
   def learner_users(stack), do: client().learner_users(stack)
   def refresh, do: client().refresh()
 
-  def experts(requestable_usernames, stacks) do
+  def reviewers(requestable_usernames, stacks) do
     stacks
-    |> Enum.reduce(%{requestable_usernames: requestable_usernames, experts: []}, fn stack, acc ->
-      expert_usernames =
+    |> Enum.reduce(%{requestable_usernames: requestable_usernames, reviewers: []}, fn stack, acc ->
+      reviewer_usernames =
         stack
-        |> expert_users()
+        |> reviewer_users()
         |> Enum.map(& &1.username)
-        |> keep_requestable_experts(acc[:requestable_usernames])
+        |> keep_requestable_reviewers(acc[:requestable_usernames])
         |> Enum.take_random(1)
 
       acc
-      |> remove_from_requestable_users(expert_usernames)
-      |> add_to_experts(expert_usernames, stack)
+      |> remove_from_requestable_users(reviewer_usernames)
+      |> add_to_reviewers(reviewer_usernames, stack)
     end)
-    |> Map.get(:experts)
+    |> Map.get(:reviewers)
   end
 
   def learners(requestable_usernames, stacks) do
@@ -43,20 +43,20 @@ defmodule Dispatch.Settings do
     update_in(acc, [:requestable_usernames], &(&1 -- stack_users))
   end
 
-  defp add_to_experts(acc, users, stack) do
-    users = Enum.map(users, &%Expert{username: &1, type: "expert", metadata: %{stack: stack}})
+  defp add_to_reviewers(acc, users, stack) do
+    users = Enum.map(users, &%Reviewer{username: &1, type: "reviewer", metadata: %{stack: stack}})
 
-    update_in(acc, [:experts], &(&1 ++ users))
+    update_in(acc, [:reviewers], &(&1 ++ users))
   end
 
   defp add_to_learners(acc, users, stack) do
-    users = Enum.map(users, &%Expert{username: &1.username, type: "learner", metadata: %{stack: stack, exposure: &1.exposure}})
+    users = Enum.map(users, &%Reviewer{username: &1.username, type: "learner", metadata: %{stack: stack, exposure: &1.exposure}})
 
     update_in(acc, [:learners], &(&1 ++ users))
   end
 
-  defp keep_requestable_experts(expert_usernames, requestable_usernames) do
-    Kernel.--(expert_usernames, expert_usernames -- requestable_usernames)
+  defp keep_requestable_reviewers(reviewer_usernames, requestable_usernames) do
+    Kernel.--(reviewer_usernames, reviewer_usernames -- requestable_usernames)
   end
 
   defp keep_requestable_learners(learner_usernames, requestable_users) do

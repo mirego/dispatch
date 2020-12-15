@@ -4,8 +4,8 @@ defmodule DispatchTest do
   import Mox
 
   alias Dispatch.BlocklistedUser
-  alias Dispatch.Expert
   alias Dispatch.Learner
+  alias Dispatch.Reviewer
   alias Dispatch.SelectedUser
 
   alias Dispatch.Repositories.Contributor
@@ -16,7 +16,7 @@ defmodule DispatchTest do
 
   setup :verify_on_exit!
 
-  test "with blocklisted, random expert and random stack user" do
+  test "with blocklisted, random reviewer and random stack user" do
     Dispatch.Repositories.MockClient
     |> expect(:fetch_requestable_users, fn "mirego/foo" -> @requestable_users end)
     |> expect(:fetch_contributors, fn "mirego/foo" ->
@@ -30,8 +30,8 @@ defmodule DispatchTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
-    |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
-    |> expect(:expert_users, fn "graphql" -> [%Expert{username: "biz"}, %Expert{username: "foo"}] end)
+    |> expect(:reviewer_users, fn "elixir" -> [%Reviewer{username: "foo"}] end)
+    |> expect(:reviewer_users, fn "graphql" -> [%Reviewer{username: "biz"}, %Reviewer{username: "foo"}] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
@@ -47,7 +47,7 @@ defmodule DispatchTest do
              },
              %SelectedUser{
                metadata: %{stack: "graphql"},
-               type: "expert",
+               type: "reviewer",
                username: "biz"
              }
            ]
@@ -67,8 +67,8 @@ defmodule DispatchTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
-    |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
-    |> expect(:expert_users, fn "graphql" -> [%Expert{username: "bar"}, %Expert{username: "foo"}] end)
+    |> expect(:reviewer_users, fn "elixir" -> [%Reviewer{username: "foo"}] end)
+    |> expect(:reviewer_users, fn "graphql" -> [%Reviewer{username: "bar"}, %Reviewer{username: "foo"}] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
@@ -101,8 +101,8 @@ defmodule DispatchTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
-    |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
-    |> expect(:expert_users, fn "graphql" -> [%Expert{username: "biz"}, %Expert{username: "omg"}] end)
+    |> expect(:reviewer_users, fn "elixir" -> [%Reviewer{username: "foo"}] end)
+    |> expect(:reviewer_users, fn "graphql" -> [%Reviewer{username: "biz"}, %Reviewer{username: "omg"}] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
@@ -168,7 +168,7 @@ defmodule DispatchTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
-    |> expect(:expert_users, fn "elixir" -> [] end)
+    |> expect(:reviewer_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
@@ -192,7 +192,7 @@ defmodule DispatchTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
-    |> expect(:expert_users, fn "elixir" -> [] end)
+    |> expect(:reviewer_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
@@ -210,7 +210,7 @@ defmodule DispatchTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
-    |> expect(:expert_users, fn "elixir" -> [] end)
+    |> expect(:reviewer_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "elixir" ->
       [
         %Learner{username: "foo", exposure: 1},
