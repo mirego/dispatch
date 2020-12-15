@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.0 (_In progress_)
+## v1.1.0
 
 ### 1. Features
 
