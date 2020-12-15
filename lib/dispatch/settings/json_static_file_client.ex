@@ -3,12 +3,12 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
 
   @behaviour Dispatch.Settings.ClientBehaviour
 
-  alias Dispatch.{BlocklistedUser, Expert, Learner}
+  alias Dispatch.{BlocklistedUser, Learner, Reviewer}
   alias Dispatch.Settings.ClientBehaviour
 
   defmodule State do
-    @enforce_keys ~w(experts learners blocklist)a
-    defstruct experts: nil, learners: nil, blocklist: nil
+    @enforce_keys ~w(reviewers learners blocklist)a
+    defstruct reviewers: nil, learners: nil, blocklist: nil
   end
 
   def start_link do
@@ -18,11 +18,11 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
   end
 
   @impl ClientBehaviour
-  def expert_users(stack) do
+  def reviewer_users(stack) do
     __MODULE__
-    |> Agent.get(& &1.experts)
+    |> Agent.get(& &1.reviewers)
     |> Map.get(stack, [])
-    |> Enum.map(&%Expert{username: &1["username"]})
+    |> Enum.map(&%Reviewer{username: &1["username"]})
   end
 
   @impl ClientBehaviour
@@ -42,10 +42,10 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
 
   @impl ClientBehaviour
   def stacks do
-    experts = Agent.get(__MODULE__, & &1.experts)
+    reviewers = Agent.get(__MODULE__, & &1.reviewers)
     learners = Agent.get(__MODULE__, & &1.learners)
 
-    experts
+    reviewers
     |> Map.merge(learners)
     |> Map.keys()
   end
@@ -61,7 +61,7 @@ defmodule Dispatch.Settings.JSONStaticFileClient do
 
     %State{
       learners: Map.get(configuration, "learners", %{}),
-      experts: Map.get(configuration, "experts", %{}),
+      reviewers: Map.get(configuration, "reviewers", Map.get(configuration, "experts", %{})),
       blocklist: Map.get(configuration, "blocklist", Map.get(configuration, "blacklist", []))
     }
   end

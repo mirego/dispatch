@@ -121,7 +121,7 @@ The `priv/scripts/ci-check.sh` script runs a few commands (tests, lint, etc.) to
 The configuration file stored at `CONFIGURATION_FILE_URL` should contain a JSON object with three keys:
 
 * `blocklist`
-* `experts`
+* `reviewers`
 * `learners`
 
 ```json
@@ -131,7 +131,7 @@ The configuration file stored at `CONFIGURATION_FILE_URL` should contain a JSON 
       "username": "github_username"
     }
   ],
-  "experts": {
+  "reviewers": {
     "stack_name": [
       {
         "username": "github_username"

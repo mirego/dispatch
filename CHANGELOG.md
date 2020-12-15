@@ -12,7 +12,8 @@
 
 ### 3. Deprecations
 
-- `blacklist` is replaced with `blocklist`
+- `blacklist` is replaced with `blocklist` in the JSON static configuration file
+- `experts` is replaced with `reviewers` in the JSON static configuration file
 
 ### 4. Breaking changes
 

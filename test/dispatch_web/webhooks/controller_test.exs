@@ -4,8 +4,8 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
   import Mox
 
   alias Dispatch.BlocklistedUser
-  alias Dispatch.Expert
   alias Dispatch.Learner
+  alias Dispatch.Reviewer
   alias Dispatch.SelectedUser
 
   alias Dispatch.Repositories.Contributor
@@ -96,7 +96,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
-    |> expect(:expert_users, fn "elixir" -> [] end)
+    |> expect(:reviewer_users, fn "elixir" -> [] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
 
@@ -172,7 +172,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                      1,
                                      [
                                        %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                       %SelectedUser{username: "biz", type: "expert", metadata: %{stack: "graphql"}}
+                                       %SelectedUser{username: "biz", type: "reviewer", metadata: %{stack: "graphql"}}
                                      ] ->
       :ok
     end)
@@ -180,7 +180,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                           1,
                                           [
                                             %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                            %SelectedUser{username: "biz", type: "expert", metadata: %{stack: "graphql"}},
+                                            %SelectedUser{username: "biz", type: "reviewer", metadata: %{stack: "graphql"}},
                                             %SelectedUser{username: "pif", type: "learner", metadata: %{stack: "elixir"}}
                                           ] ->
       :ok
@@ -189,8 +189,8 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
-    |> expect(:expert_users, fn "elixir" -> [%Expert{username: "foo"}] end)
-    |> expect(:expert_users, fn "graphql" -> [%Expert{username: "biz"}, %Expert{username: "omg"}] end)
+    |> expect(:reviewer_users, fn "elixir" -> [%Reviewer{username: "foo"}] end)
+    |> expect(:reviewer_users, fn "graphql" -> [%Reviewer{username: "biz"}, %Reviewer{username: "omg"}] end)
     |> expect(:learner_users, fn "elixir" -> [%Learner{username: "paf", exposure: 0}, %Learner{username: "pif", exposure: 1}] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 
@@ -212,7 +212,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                },
                %{
                  "metadata" => %{"stack" => "graphql"},
-                 "type" => "expert",
+                 "type" => "reviewer",
                  "username" => "biz"
                },
                %{
@@ -240,7 +240,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                      1,
                                      [
                                        %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                       %SelectedUser{username: "ruby-master", type: "expert", metadata: %{stack: "ruby"}}
+                                       %SelectedUser{username: "ruby-master", type: "reviewer", metadata: %{stack: "ruby"}}
                                      ] ->
       :ok
     end)
@@ -248,7 +248,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                                           1,
                                           [
                                             %SelectedUser{username: "bar", type: "contributor", metadata: %{recent_commit_count: 1, total_commit_count: 1}},
-                                            %SelectedUser{username: "ruby-master", type: "expert", metadata: %{stack: "ruby"}},
+                                            %SelectedUser{username: "ruby-master", type: "reviewer", metadata: %{stack: "ruby"}},
                                             %SelectedUser{username: "ruby-learner", type: "learner", metadata: %{stack: "ruby"}}
                                           ] ->
       :ok
@@ -257,7 +257,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [%BlocklistedUser{username: "foo"}] end)
-    |> expect(:expert_users, fn "ruby" -> [%Expert{username: "ruby-master"}] end)
+    |> expect(:reviewer_users, fn "ruby" -> [%Reviewer{username: "ruby-master"}] end)
     |> expect(:learner_users, fn "ruby" -> [%Learner{username: "ruby-learner", exposure: 1}] end)
 
     expect(Dispatch.Absences.MockClient, :fetch_absents, fn -> [] end)
@@ -275,7 +275,7 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
                },
                %{
                  "metadata" => %{"stack" => "ruby"},
-                 "type" => "expert",
+                 "type" => "reviewer",
                  "username" => "ruby-master"
                },
                %{
@@ -305,8 +305,8 @@ defmodule DispatchWeb.Webhooks.ControllerTest do
     Dispatch.Settings.MockClient
     |> expect(:refresh, fn -> true end)
     |> expect(:blocklisted_users, fn -> [] end)
-    |> expect(:expert_users, fn "elixir" -> [] end)
-    |> expect(:expert_users, fn "graphql" -> [] end)
+    |> expect(:reviewer_users, fn "elixir" -> [] end)
+    |> expect(:reviewer_users, fn "graphql" -> [] end)
     |> expect(:learner_users, fn "elixir" -> [] end)
     |> expect(:learner_users, fn "graphql" -> [] end)
 

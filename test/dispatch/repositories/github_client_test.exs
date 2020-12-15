@@ -253,31 +253,31 @@ defmodule Dispatch.Repositories.GitHubClientTest do
 
   test "create_request_comment/3 with successful response" do
     expected_url = "https://api.github.com/repos/mirego/foo/issues/123/comments"
-    body = "{\"body\":\"**🦀 Requesting reviewers for this pull request:**\\n\\n* @morpheus (contributor)\\n* @neo (expert reviewer)\"}"
+    body = "{\"body\":\"**🦀 Requesting reviewers for this pull request:**\\n\\n* @morpheus (contributor)\\n* @neo (reviewer)\"}"
 
     with_mock HTTPoison, post: fn ^expected_url, ^body, _ -> {:ok, %HTTPoison.Response{status_code: 201}} end do
       assert :ok ==
-               GitHubClient.create_request_comment("mirego/foo", 123, [%SelectedUser{username: "morpheus", type: "contributor"}, %SelectedUser{username: "neo", type: "expert"}])
+               GitHubClient.create_request_comment("mirego/foo", 123, [%SelectedUser{username: "morpheus", type: "contributor"}, %SelectedUser{username: "neo", type: "reviewer"}])
     end
   end
 
   test "create_request_comment/3 with non-successful response" do
     expected_url = "https://api.github.com/repos/mirego/foo/issues/123/comments"
-    body = "{\"body\":\"**🦀 Requesting reviewers for this pull request:**\\n\\n* @morpheus (contributor)\\n* @neo (expert reviewer)\"}"
+    body = "{\"body\":\"**🦀 Requesting reviewers for this pull request:**\\n\\n* @morpheus (contributor)\\n* @neo (reviewer)\"}"
 
     with_mock HTTPoison, post: fn ^expected_url, ^body, _ -> {:ok, %HTTPoison.Response{status_code: 404}} end do
       assert :error ==
-               GitHubClient.create_request_comment("mirego/foo", 123, [%SelectedUser{username: "morpheus", type: "contributor"}, %SelectedUser{username: "neo", type: "expert"}])
+               GitHubClient.create_request_comment("mirego/foo", 123, [%SelectedUser{username: "morpheus", type: "contributor"}, %SelectedUser{username: "neo", type: "reviewer"}])
     end
   end
 
   test "create_request_comment/3 with erroneous response" do
     expected_url = "https://api.github.com/repos/mirego/foo/issues/123/comments"
-    body = "{\"body\":\"**🦀 Requesting reviewers for this pull request:**\\n\\n* @morpheus (contributor)\\n* @neo (expert reviewer)\"}"
+    body = "{\"body\":\"**🦀 Requesting reviewers for this pull request:**\\n\\n* @morpheus (contributor)\\n* @neo (reviewer)\"}"
 
     with_mock HTTPoison, post: fn ^expected_url, ^body, _ -> {:error, "error"} end do
       assert :error ==
-               GitHubClient.create_request_comment("mirego/foo", 123, [%SelectedUser{username: "morpheus", type: "contributor"}, %SelectedUser{username: "neo", type: "expert"}])
+               GitHubClient.create_request_comment("mirego/foo", 123, [%SelectedUser{username: "morpheus", type: "contributor"}, %SelectedUser{username: "neo", type: "reviewer"}])
     end
   end
 end

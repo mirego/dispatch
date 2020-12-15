@@ -10,7 +10,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     {
       "learners": {},
       "blocklist": {},
-      "experts": {}
+      "reviewers": {}
     }
     """
 
@@ -34,7 +34,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
         ]
       },
       "blocklist": [],
-      "experts": {}
+      "reviewers": {}
     }
     """
 
@@ -46,7 +46,30 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     end
   end
 
-  test "stack experts" do
+  test "stack reviewers" do
+    body = """
+    {
+      "learners": {},
+      "blocklist": [],
+      "reviewers": {
+        "elixir": [
+          {
+            "username": "test"
+          }
+        ]
+      }
+    }
+    """
+
+    with_mock HTTPoison, get: fn _ -> {:ok, %HTTPoison.Response{status_code: 200, body: body}} end do
+      Client.refresh()
+
+      users = Client.reviewer_users("elixir")
+      assert users === [%Dispatch.Reviewer{username: "test"}]
+    end
+  end
+
+  test "deprecated stack experts" do
     body = """
     {
       "learners": {},
@@ -64,8 +87,8 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
     with_mock HTTPoison, get: fn _ -> {:ok, %HTTPoison.Response{status_code: 200, body: body}} end do
       Client.refresh()
 
-      users = Client.expert_users("elixir")
-      assert users === [%Dispatch.Expert{username: "test"}]
+      users = Client.reviewer_users("elixir")
+      assert users === [%Dispatch.Reviewer{username: "test"}]
     end
   end
 
@@ -78,7 +101,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
           "username": "test"
         }
       ],
-      "experts": {}
+      "reviewers": {}
     }
     """
 
@@ -99,7 +122,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
           "username": "test"
         }
       ],
-      "experts": {}
+      "reviewers": {}
     }
     """
 
@@ -119,7 +142,7 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
         "javascript": []
       },
       "blocklist": [],
-      "experts": {
+      "reviewers": {
         "javascript": [],
         "react": []
       }
@@ -143,11 +166,11 @@ defmodule Dispatch.Settings.JSONStaticFileClientTest do
 
       stacks = Client.stacks()
       blocklisted = Client.blocklisted_users()
-      experts = Client.expert_users("elixir")
+      reviewers = Client.reviewer_users("elixir")
       learners = Client.learner_users("elixir")
 
       assert length(learners) === 0
-      assert length(experts) === 0
+      assert length(reviewers) === 0
       assert length(blocklisted) === 0
       assert length(stacks) === 0
     end

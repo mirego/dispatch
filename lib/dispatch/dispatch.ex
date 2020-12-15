@@ -15,7 +15,7 @@ defmodule Dispatch do
     defstruct username: nil
   end
 
-  defmodule Expert do
+  defmodule Reviewer do
     @enforce_keys [:username]
     @derive Jason.Encoder
     defstruct username: nil, type: nil, metadata: nil
@@ -54,15 +54,15 @@ defmodule Dispatch do
     contributors = Repositories.contributors(repo, requestable_usernames)
     requestable_usernames = update_requestable_usernames(requestable_usernames, Enum.map(contributors, & &1.username))
 
-    # 4. Update the pool and then select a random stack-skilled expert for each stack
-    stack_experts = Settings.experts(requestable_usernames, stacks)
+    # 4. Update the pool and then select a random stack-skilled reviewer for each stack
+    stack_reviewers = Settings.reviewers(requestable_usernames, stacks)
     requestable_usernames = update_requestable_usernames(requestable_usernames, Enum.map(contributors, & &1.username))
 
     # 5. Update the pool and then randomly add -learners as reviewers for each stack
     stack_learners = if disable_learners, do: [], else: Settings.learners(requestable_usernames, stacks)
 
     # 6. Map all selected users to SelectedUser struct
-    Enum.map(contributors ++ stack_experts ++ stack_learners, &struct(SelectedUser, Map.from_struct(&1)))
+    Enum.map(contributors ++ stack_reviewers ++ stack_learners, &struct(SelectedUser, Map.from_struct(&1)))
   end
 
   @doc """
@@ -99,7 +99,7 @@ defmodule Dispatch do
 
   def extract_from_params(_), do: []
 
-  def request_or_mention_reviewer?(%SelectedUser{type: type}) when type in ["contributor", "expert"], do: :request
+  def request_or_mention_reviewer?(%SelectedUser{type: type}) when type in ["contributor", "reviewer"], do: :request
   def request_or_mention_reviewer?(_), do: :mention
 
   defp update_requestable_usernames(requestable_usernames, reviewer_usernames) do
