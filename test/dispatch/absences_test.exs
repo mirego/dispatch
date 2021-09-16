@@ -15,17 +15,17 @@ defmodule Dispatch.AbsencesTest do
       %ExIcal.Event{
         start: Timex.subtract(now, Duration.from_minutes(60)),
         end: Timex.add(now, Duration.from_minutes(60)),
-        summary: " Out of Office - supaidaman"
+        summary: "Out of Office - supaidaman"
       },
       %ExIcal.Event{
         start: Timex.subtract(now, Duration.from_days(1)),
         end: Timex.add(now, Duration.from_days(1)),
-        summary: "Out of Office - Swamp Thing"
+        summary: "Foo - Bar - Swamp Thing"
       },
       %ExIcal.Event{
         start: Timex.add(now, Duration.from_days(7)),
         end: Timex.add(now, Duration.from_days(14)),
-        summary: " Out of Office - Not absent"
+        summary: "Maternity Leave - Not absent"
       }
     ]
 
@@ -46,6 +46,11 @@ defmodule Dispatch.AbsencesTest do
         summary: " Out of Office - John Doe"
       },
       %ExIcal.Event{
+        start: Timex.subtract(now, Duration.from_minutes(60)),
+        end: Timex.add(now, Duration.from_minutes(60)),
+        summary: "Vacation - Jane Smith"
+      },
+      %ExIcal.Event{
         start: Timex.subtract(now, Duration.from_days(1)),
         end: Timex.add(now, Duration.from_days(1)),
         summary: nil
@@ -61,7 +66,7 @@ defmodule Dispatch.AbsencesTest do
 
     results = Absences.absent_fullnames()
 
-    assert results == ["john doe"]
+    assert results == ["john doe", "jane smith"]
   end
 
   test "absents/0 return empty list on no absents" do

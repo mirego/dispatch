@@ -11,8 +11,13 @@ defmodule Dispatch.Absences do
 
   defp absent_right_now?(%{start: starts, end: ends}), do: Timex.between?(Timex.now(), starts, ends, inclusive: true)
 
-  defp extract_fullname(%ExIcal.Event{summary: " Out of Office - " <> fullname}), do: Normalization.normalize(fullname)
-  defp extract_fullname(%ExIcal.Event{summary: "Out of Office - " <> fullname}), do: Normalization.normalize(fullname)
+  defp extract_fullname(%ExIcal.Event{summary: summary}) when is_binary(summary) do
+    summary
+    |> String.split(" - ")
+    |> List.last()
+    |> Normalization.normalize()
+  end
+
   defp extract_fullname(_), do: nil
 
   defp client, do: Application.get_env(:dispatch, Dispatch)[:absences_client]
