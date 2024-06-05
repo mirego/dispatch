@@ -36,7 +36,10 @@ defmodule Dispatch do
   @doc """
   Returns a list of usernames that should be request to review the pull request
   """
-  def fetch_selected_users(repo, stacks, author_username, disable_learners \\ false) do
+  def fetch_selected_users(repo, stacks, author_username, opts \\ []) do
+    disable_learners = Keyword.get(opts, :disable_learners, false)
+    minimum_contributor_count = Keyword.get(opts, :minimum_contributor_count, 1) || 1
+
     excluded_usernames = [author_username | Enum.map(Settings.blocklisted_users(), & &1.username)]
 
     # 1. Refresh settings
@@ -51,7 +54,7 @@ defmodule Dispatch do
       |> Kernel.--(excluded_usernames)
 
     # 3. Select relevant contributors from it
-    contributors = Repositories.contributors(repo, requestable_usernames)
+    contributors = Repositories.contributors(repo, requestable_usernames, minimum_contributor_count)
     requestable_usernames = update_requestable_usernames(requestable_usernames, Enum.map(contributors, & &1.username))
 
     # 4. Update the pool and then select a random stack-skilled reviewer for each stack
