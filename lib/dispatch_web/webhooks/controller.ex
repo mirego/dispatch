@@ -26,10 +26,11 @@ defmodule DispatchWeb.Webhooks.Controller do
     pull_request_number = get_in(params, ["number"])
     author = get_in(params, ["pull_request", "user", "login"])
     repo = get_in(params, ["repository", "full_name"])
+    minimum_contributor_count = get_in(params, ["minimum_contributor_count"])
 
     stacks = Dispatch.extract_from_params(params)
     disable_learners = string_to_boolean(Map.get(params, "disable_learners"))
-    selected_users = Dispatch.fetch_selected_users(repo, stacks, author, disable_learners)
+    selected_users = Dispatch.fetch_selected_users(repo, stacks, author, disable_learners: disable_learners, minimum_contributor_count: minimum_contributor_count)
 
     repo
     |> Dispatch.request_reviewers(pull_request_number, selected_users)

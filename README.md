@@ -37,10 +37,11 @@ Everything is done via a simple GitHub webhook:
 
 #### Webhook query string parameters
 
-| Parameter          | Default value | Description                                                        |
-|--------------------|---------------|--------------------------------------------------------------------|
-| `stacks`           | `""`          | Comma-separated values of project’s stacks (e.g. `elixir,graphql`) |
-| `disable_learners` | `false`       | Disable _learners_ for this repository                             |
+| Parameter                    | Default value     | Description                                                        |
+|------------------------------|-------------------|--------------------------------------------------------------------|
+| `stacks`                     | `""`              | Comma-separated values of project’s stacks (e.g. `elixir,graphql`) |
+| `disable_learners`           | `false`           | Disable _learners_ for this repository                             |
+| `minimum_contributors_count` | 1                 | Number of contributors to select                                   |
 
 ### Features
 
@@ -48,7 +49,7 @@ Everything is done via a simple GitHub webhook:
 
 When a pull request is opened, Dispatch selects a list of users that will be requested for a review:
 
-* One recent repository contributor
+* One or many recent repository contributor
 * One reviewer _per stack_
 * One or many learners _per stack_ (who will only be mentionned in the request comment)
 
