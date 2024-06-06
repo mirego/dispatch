@@ -37,11 +37,11 @@ Everything is done via a simple GitHub webhook:
 
 #### Webhook query string parameters
 
-| Parameter                    | Default value     | Description                                                        |
-|------------------------------|-------------------|--------------------------------------------------------------------|
-| `stacks`                     | `""`              | Comma-separated values of project’s stacks (e.g. `elixir,graphql`) |
-| `disable_learners`           | `false`           | Disable _learners_ for this repository                             |
-| `minimum_contributors_count` | 1                 | Number of contributors to select                                   |
+| Parameter                   | Default value     | Description                                                        |
+|-----------------------------|-------------------|--------------------------------------------------------------------|
+| `stacks`                    | `""`              | Comma-separated values of project’s stacks (e.g. `elixir,graphql`) |
+| `disable_learners`          | `false`           | Disable _learners_ for this repository                             |
+| `minimum_contributor_count` | 1                 | Number of contributors to select                                   |
 
 ### Features
 
